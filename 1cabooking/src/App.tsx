@@ -12,7 +12,7 @@ import { EXTRAS, EXTENDED_COVERAGE } from './data/extras';
 import { PROVINCE_TAXES } from './data/step3Options';
 import { Check, CalendarCheck } from 'lucide-react';
 
-const BACKEND_URL = import.meta.env.PROD ? 'https://1cleanairbackend.vercel.app' : '';
+const BACKEND_URL = '';  // always use /api/* — Vite proxy in dev, Vercel functions in prod
 const API_SECRET  = '1cleanAir_2026_dispatch_secure_X9d83jsk29DKL';
 
 const EMPTY_STEP1: Step1Selection = {
