@@ -10,7 +10,7 @@ import Step4, { type Step4Data, EMPTY_STEP4, type DayAvailability, type RawDay, 
 import Step5 from './components/step5/Step5';
 import { EXTRAS, EXTENDED_COVERAGE } from './data/extras';
 import { PROVINCE_TAXES } from './data/step3Options';
-import { Check, CalendarCheck } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 const BACKEND_URL = '';  // always use /api/* — Vite proxy in dev, Vercel functions in prod
 const API_SECRET  = '1cleanAir_2026_dispatch_secure_X9d83jsk29DKL';
@@ -89,7 +89,6 @@ function BookingApp() {
   /* ── Booking state ── */
   const [bookState, setBookState]   = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
   const [bookError, setBookError]   = useState('');
-  const [eventLink, setEventLink]   = useState('');
 
   const handleDryerVentLocationChange = (id: string, qty: number) => {
     setDryerVentLocations((prev) => {
@@ -224,7 +223,6 @@ function BookingApp() {
         throw new Error(data?.error || data?.message || `Booking failed (${res.status})`);
       }
 
-      setEventLink(data.htmlLink || '');
       setBookState('done');
     } catch (e: unknown) {
       setBookError((e as Error).message);
@@ -256,23 +254,23 @@ function BookingApp() {
               <h2 className="text-2xl font-bold text-gray-800 mb-2">
                 {lang === 'en' ? 'Booking Confirmed!' : 'Réservation confirmée!'}
               </h2>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 leading-relaxed">
                 {lang === 'en'
-                  ? `A confirmation email has been sent to ${step3Data.email}.`
-                  : `Un e-mail de confirmation a été envoyé à ${step3Data.email}.`}
+                  ? 'An associate will be in touch with you regarding this booking.'
+                  : 'Un associé vous contactera concernant cette réservation.'}
               </p>
             </div>
-            {eventLink && (
+            <div className="border-t border-gray-100 pt-4">
+              <p className="text-xs text-gray-400 mb-1">
+                {lang === 'en' ? 'Urgent question? Contact us at' : 'Question urgente? Contactez-nous au'}
+              </p>
               <a
-                href={eventLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 font-semibold underline"
+                href="tel:6136124828"
+                className="text-base font-bold text-blue-700 hover:text-blue-900 transition-colors"
               >
-                <CalendarCheck className="w-4 h-4" />
-                {lang === 'en' ? 'View Calendar Event' : 'Voir l\'événement'}
+                (613)-612-4828
               </a>
-            )}
+            </div>
           </div>
         </div>
       </div>
