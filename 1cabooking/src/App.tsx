@@ -75,7 +75,11 @@ function BookingApp() {
         const rawDays: RawDay[] = json.days || [];
         const mapped: DayAvailability[] = rawDays
           .map((d) => ({ date: d.date, slots: mergeSlots(d.slots || []) }))
-          .filter((d) => d.slots.length > 0);
+          .filter((d) => d.slots.length > 0)
+          .filter((d) => {
+            const [y, m, day] = d.date.split('-').map(Number);
+            return new Date(y, m - 1, day).getDay() !== 0; // block Sundays
+          });
         setAvailDays(mapped);
       })
       .catch((e: Error) => setAvailError(e.message))
