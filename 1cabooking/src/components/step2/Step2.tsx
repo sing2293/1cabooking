@@ -5,9 +5,11 @@ import ExtraCard from './ExtraCard';
 interface Props {
   selectedExtras: Record<string, number>;
   onExtrasChange: (extras: Record<string, number>) => void;
+  dryerVentLocations: Record<string, number>;
+  onDryerVentLocationChange: (id: string, qty: number) => void;
 }
 
-export default function Step2({ selectedExtras, onExtrasChange }: Props) {
+export default function Step2({ selectedExtras, onExtrasChange, dryerVentLocations, onDryerVentLocationChange }: Props) {
   const { lang } = useLang();
 
   const handleAdd = (id: string, hasQty: boolean) => {
@@ -56,6 +58,8 @@ export default function Step2({ selectedExtras, onExtrasChange }: Props) {
             quantity={selectedExtras[extra.id] ?? 0}
             onAdd={() => handleAdd(extra.id, extra.hasQuantity)}
             onQuantityChange={(qty) => handleQtyChange(extra.id, qty)}
+            dryerVentLocations={extra.dryerLocations ? dryerVentLocations : undefined}
+            onDryerVentLocationChange={extra.dryerLocations ? onDryerVentLocationChange : undefined}
           />
         ))}
       </div>

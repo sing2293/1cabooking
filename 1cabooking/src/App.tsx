@@ -28,15 +28,30 @@ function BookingApp() {
 
   const [step1Data, setStep1Data] = useState<Step1Selection>(EMPTY_STEP1);
   const [selectedExtras, setSelectedExtras] = useState<Record<string, number>>({});
+  const [dryerVentLocations, setDryerVentLocations] = useState<Record<string, number>>({});
   const [couponCode, setCouponCode] = useState('');
   const [couponDiscount] = useState(0);
   const [step3Data, setStep3Data] = useState<Step3Data>(EMPTY_STEP3);
 
+  const handleDryerVentLocationChange = (id: string, qty: number) => {
+    setDryerVentLocations((prev) => {
+      const next = { ...prev };
+      if (qty === 0) delete next[id];
+      else next[id] = qty;
+      return next;
+    });
+  };
+
   /* ── Total calculation ── */
+  const dryerVentExtra = EXTRAS.find((e) => e.id === 'extra-dryer-vent');
+  const dryerVentTotal = dryerVentExtra?.dryerLocations
+    ? dryerVentExtra.dryerLocations.reduce((sum, loc) => sum + loc.price * (dryerVentLocations[loc.id] ?? 0), 0)
+    : 0;
+
   const extrasTotal = Object.entries(selectedExtras).reduce((sum, [id, qty]) => {
     const extra = EXTRAS.find((e) => e.id === id);
     return sum + (extra ? extra.bundlePrice * qty : 0);
-  }, 0);
+  }, 0) + dryerVentTotal;
 
   const province = currentStep >= 3 ? step3Data.province : 'Québec';
   const unitLocationFee = currentStep >= 3 ? step3Data.unitLocationFee : 0;
@@ -82,7 +97,12 @@ function BookingApp() {
           <div className="flex-1 min-w-0 w-full">
             {currentStep === 1 && <Step1 onSelectionChange={setStep1Data} />}
             {currentStep === 2 && (
-              <Step2 selectedExtras={selectedExtras} onExtrasChange={setSelectedExtras} />
+              <Step2
+                selectedExtras={selectedExtras}
+                onExtrasChange={setSelectedExtras}
+                dryerVentLocations={dryerVentLocations}
+                onDryerVentLocationChange={handleDryerVentLocationChange}
+              />
             )}
             {currentStep === 3 && (
               <Step3 data={step3Data} onChange={setStep3Data} />
@@ -95,6 +115,7 @@ function BookingApp() {
               step={currentStep}
               step1={step1Data}
               selectedExtras={selectedExtras}
+              dryerVentLocations={dryerVentLocations}
               province={province}
               unitLocationFee={unitLocationFee}
               couponCode={couponCode}

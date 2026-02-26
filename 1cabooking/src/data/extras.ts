@@ -1,5 +1,11 @@
 import type { T } from './services';
 
+export interface DryerLocation {
+  id: string;
+  label: T;
+  price: number;
+}
+
 export interface Extra {
   id: string;
   name: T;
@@ -9,6 +15,7 @@ export interface Extra {
   bundlePricePrefix?: T; // e.g. "Start" for dryer vent
   hasQuantity: boolean;
   image?: string;
+  dryerLocations?: DryerLocation[];
 }
 
 export const EXTENDED_COVERAGE = 8.59;
@@ -100,6 +107,13 @@ export const EXTRAS: Extra[] = [
     bundlePricePrefix: { en: 'Start', fr: 'À partir' },
     hasQuantity: false,
     image: '/images/dryer-vent.jpg',
+    dryerLocations: [
+      { id: 'ground',       label: { en: 'Ground level (No ladder)',                    fr: 'Niveau du sol (sans échelle)'            }, price: 50  },
+      { id: 'under-deck',   label: { en: "Under Deck (3' min clearance)",               fr: "Sous la terrasse (3' min)"               }, price: 100 },
+      { id: 'small-ladder', label: { en: 'Small Ladder (14 foot)',                      fr: 'Petite échelle (14 pieds)'               }, price: 100 },
+      { id: 'big-ladder',   label: { en: 'Big Ladder (22 foot)',                        fr: 'Grande échelle (22 pieds)'               }, price: 150 },
+      { id: 'rooftop',      label: { en: 'Rooftop / Difficult Access (Access Provided)',fr: 'Toit / Accès difficile (accès fourni)'   }, price: 175 },
+    ],
   },
   {
     id: 'extra-room-scan',
