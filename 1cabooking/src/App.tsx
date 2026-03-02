@@ -8,7 +8,7 @@ import Step2 from './components/step2/Step2';
 import Step3, { type Step3Data, EMPTY_STEP3 } from './components/step3/Step3';
 import Step4, { type Step4Data, EMPTY_STEP4, type DayAvailability, type RawDay, mergeSlots, toISODate } from './components/step4/Step4';
 import Step5 from './components/step5/Step5';
-import { EXTRAS, EXTENDED_COVERAGE } from './data/extras';
+import { EXTRAS } from './data/extras';
 import { PROVINCE_TAXES } from './data/step3Options';
 import { Check } from 'lucide-react';
 import LocationGate from './components/LocationGate';
@@ -35,7 +35,6 @@ function BookingApp() {
 
   const [step1Data, setStep1Data] = useState<Step1Selection>(EMPTY_STEP1);
   const [selectedExtras, setSelectedExtras] = useState<Record<string, number>>({});
-  const [dryerVentLocations, setDryerVentLocations] = useState<Record<string, number>>({});
   const [couponCode, setCouponCode] = useState('');
   const [couponDiscount] = useState(0);
   const [step3Data, setStep3Data] = useState<Step3Data>(EMPTY_STEP3);
@@ -106,29 +105,15 @@ function BookingApp() {
   const [bookState, setBookState]   = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
   const [bookError, setBookError]   = useState('');
 
-  const handleDryerVentLocationChange = (id: string, qty: number) => {
-    setDryerVentLocations((prev) => {
-      const next = { ...prev };
-      if (qty === 0) delete next[id];
-      else next[id] = qty;
-      return next;
-    });
-  };
-
   /* ── Total calculation ── */
-  const dryerVentExtra = EXTRAS.find((e) => e.id === 'extra-dryer-vent');
-  const dryerVentTotal = dryerVentExtra?.dryerLocations
-    ? dryerVentExtra.dryerLocations.reduce((sum, loc) => sum + loc.price * (dryerVentLocations[loc.id] ?? 0), 0)
-    : 0;
-
   const extrasTotal = Object.entries(selectedExtras).reduce((sum, [id, qty]) => {
     const extra = EXTRAS.find((e) => e.id === id);
     return sum + (extra ? extra.bundlePrice * qty : 0);
-  }, 0) + dryerVentTotal;
+  }, 0);
 
   const province       = currentStep >= 3 ? step3Data.province : 'Québec';
   const unitLocationFee = currentStep >= 3 ? step3Data.unitLocationFee : 0;
-  const subtotal       = step1Data.subtotal + extrasTotal + unitLocationFee + EXTENDED_COVERAGE - couponDiscount;
+  const subtotal       = step1Data.subtotal + extrasTotal + unitLocationFee - couponDiscount;
   const taxInfo        = PROVINCE_TAXES[province] ?? PROVINCE_TAXES['Québec'];
   const totalTax       = taxInfo.lines.reduce((s, l) => s + subtotal * l.rate, 0);
 
@@ -148,9 +133,14 @@ function BookingApp() {
 
   const step4Valid = step4Data.selectedDate !== null && step4Data.selectedSlot !== null;
 
+  const step2Valid =
+    step1Data.categoryId === 'carpet'
+      ? Object.values(selectedExtras).some((qty) => qty > 0)
+      : true;
+
   const canProceed =
     currentStep === 1 ? step1Data.isValid :
-    currentStep === 2 ? true :
+    currentStep === 2 ? step2Valid :
     currentStep === 3 ? step3Valid :
     currentStep === 4 ? step4Valid :
     true;
@@ -178,16 +168,6 @@ function BookingApp() {
       if (extra) lines.push(`  • ${extra.name.en}${qty > 1 ? ` ×${qty}` : ''}: ${fmt(extra.bundlePrice * qty)}`);
     });
 
-    // Dryer vent locations
-    if (dryerVentTotal > 0) {
-      const dve = EXTRAS.find((e) => e.id === 'extra-dryer-vent');
-      dve?.dryerLocations?.forEach((loc) => {
-        const qty = dryerVentLocations[loc.id] ?? 0;
-        if (qty > 0) lines.push(`  • ${loc.label.en} ×${qty}: ${fmt(loc.price * qty)}`);
-      });
-    }
-
-    lines.push(`  • Extended Coverage: ${fmt(EXTENDED_COVERAGE)}`);
     if (unitLocationFee > 0) lines.push(`  • Unit Location Fee: ${fmt(unitLocationFee)}`);
 
     lines.push('');
@@ -326,7 +306,6 @@ function BookingApp() {
             step3={step3Data}
             step4={step4Data}
             selectedExtras={selectedExtras}
-            dryerVentLocations={dryerVentLocations}
             couponDiscount={couponDiscount}
             bookError={bookState === 'error' ? bookError : null}
           />
@@ -339,9 +318,8 @@ function BookingApp() {
                 <Step2
                   selectedExtras={selectedExtras}
                   onExtrasChange={setSelectedExtras}
-                  dryerVentLocations={dryerVentLocations}
-                  onDryerVentLocationChange={handleDryerVentLocationChange}
                   categoryId={step1Data.categoryId}
+                  packageId={step1Data.packageId}
                 />
               )}
               {currentStep === 3 && (
@@ -357,7 +335,6 @@ function BookingApp() {
                 step={currentStep}
                 step1={step1Data}
                 selectedExtras={selectedExtras}
-                dryerVentLocations={dryerVentLocations}
                 province={province}
                 unitLocationFee={unitLocationFee}
                 couponCode={couponCode}

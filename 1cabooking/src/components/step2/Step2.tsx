@@ -5,18 +5,32 @@ import ExtraCard from './ExtraCard';
 interface Props {
   selectedExtras: Record<string, number>;
   onExtrasChange: (extras: Record<string, number>) => void;
-  dryerVentLocations: Record<string, number>;
-  onDryerVentLocationChange: (id: string, qty: number) => void;
   categoryId: string | null;
+  packageId: string | null;
 }
 
-export default function Step2({ selectedExtras, onExtrasChange, dryerVentLocations, onDryerVentLocationChange, categoryId }: Props) {
+/* Map service category/package → extra ID that would be redundant */
+const EXCLUDED_BY_SERVICE: Record<string, string> = {
+  'wall-unit':        'extra-wall-unit',
+  'air-exchanger':    'extra-air-exchanger',
+  'furnace-blower':   'extra-furnace-blower',
+  'indoor-coil':      'extra-indoor-coil',
+  'outdoor-heat-pump':'extra-outdoor-heat-pump',
+};
+
+export default function Step2({ selectedExtras, onExtrasChange, categoryId, packageId }: Props) {
   const { lang } = useLang();
   const isCarpet = categoryId === 'carpet';
 
-  const visibleExtras = EXTRAS.filter((e) =>
-    isCarpet ? e.forCategory === 'carpet' : !e.forCategory
-  );
+  /* Extra IDs made redundant by the primary service selection */
+  const excludedIds = new Set<string>();
+  if (categoryId && EXCLUDED_BY_SERVICE[categoryId]) excludedIds.add(EXCLUDED_BY_SERVICE[categoryId]);
+  if (packageId  && EXCLUDED_BY_SERVICE[packageId])  excludedIds.add(EXCLUDED_BY_SERVICE[packageId]);
+
+  const visibleExtras = EXTRAS.filter((e) => {
+    if (isCarpet) return e.forCategory === 'carpet';
+    return !e.forCategory && !excludedIds.has(e.id);
+  });
 
   const handleAdd = (id: string, hasQty: boolean) => {
     onExtrasChange({ ...selectedExtras, [id]: hasQty ? 1 : 1 });
@@ -83,8 +97,6 @@ export default function Step2({ selectedExtras, onExtrasChange, dryerVentLocatio
             quantity={selectedExtras[extra.id] ?? 0}
             onAdd={() => handleAdd(extra.id, extra.hasQuantity)}
             onQuantityChange={(qty) => handleQtyChange(extra.id, qty)}
-            dryerVentLocations={extra.dryerLocations ? dryerVentLocations : undefined}
-            onDryerVentLocationChange={extra.dryerLocations ? onDryerVentLocationChange : undefined}
           />
         ))}
       </div>

@@ -1,14 +1,13 @@
 import { useLang } from '../context/LanguageContext';
 import { CheckCircle2 } from 'lucide-react';
 import type { Step1Selection } from './step1/Step1';
-import { EXTRAS, EXTENDED_COVERAGE } from '../data/extras';
+import { EXTRAS } from '../data/extras';
 import { PROVINCE_TAXES } from '../data/step3Options';
 
 interface Props {
   step: number;
   step1: Step1Selection;
   selectedExtras?: Record<string, number>;
-  dryerVentLocations?: Record<string, number>;
   province?: string;
   unitLocationFee?: number;
   couponCode?: string;
@@ -24,7 +23,6 @@ export default function ServiceSummary({
   step,
   step1,
   selectedExtras = {},
-  dryerVentLocations = {},
   province = 'Québec',
   unitLocationFee = 0,
   couponCode = '',
@@ -66,17 +64,12 @@ export default function ServiceSummary({
   }
 
   /* ── Step 2+ sidebar ── */
-  const dryerVentExtra = EXTRAS.find((e) => e.id === 'extra-dryer-vent');
-  const dryerVentTotal = dryerVentExtra?.dryerLocations
-    ? dryerVentExtra.dryerLocations.reduce((sum, loc) => sum + loc.price * (dryerVentLocations[loc.id] ?? 0), 0)
-    : 0;
-
   const extrasTotal = Object.entries(selectedExtras).reduce((sum, [id, qty]) => {
     const extra = EXTRAS.find((e) => e.id === id);
     return sum + (extra ? extra.bundlePrice * qty : 0);
-  }, 0) + dryerVentTotal;
+  }, 0);
 
-  const subtotal = step1.subtotal + extrasTotal + unitLocationFee + EXTENDED_COVERAGE - couponDiscount;
+  const subtotal = step1.subtotal + extrasTotal + unitLocationFee - couponDiscount;
   const taxInfo = PROVINCE_TAXES[province] ?? PROVINCE_TAXES['Québec'];
   const taxLines = taxInfo.lines.map((l) => ({ label: l.label, amount: subtotal * l.rate }));
   const totalTax = taxLines.reduce((s, l) => s + l.amount, 0);
@@ -139,36 +132,6 @@ export default function ServiceSummary({
           })}
         </div>
       )}
-
-      {/* Dryer vent locations breakdown */}
-      {dryerVentTotal > 0 && (
-        <div className="border-t border-gray-100 pt-3 mb-3">
-          <div className="flex justify-between items-start gap-2 mb-1.5">
-            <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wide leading-snug">
-              {lang === 'en' ? 'Dryer Vent Cleaning' : 'Nettoyage sèche-linge'}
-            </span>
-            <span className="text-sm font-semibold text-gray-900 shrink-0">{fmt(dryerVentTotal)}</span>
-          </div>
-          {dryerVentExtra?.dryerLocations?.map((loc) => {
-            const qty = dryerVentLocations[loc.id] ?? 0;
-            if (qty === 0) return null;
-            return (
-              <div key={loc.id} className="flex justify-between text-[10px] text-gray-500 pl-2">
-                <span>{t(loc.label)} × {qty}</span>
-                <span>{fmt(loc.price * qty)}</span>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Extended Coverage */}
-      <div className="flex justify-between items-baseline border-t border-gray-100 pt-3 mb-3">
-        <span className="text-xs font-semibold text-amber-600">
-          {lang === 'en' ? 'Extended Coverage' : 'Couverture étendue'}
-        </span>
-        <span className="text-sm font-semibold text-gray-900">{fmt(EXTENDED_COVERAGE)}</span>
-      </div>
 
       {/* Unit location fee (if any) */}
       {unitLocationFee > 0 && (

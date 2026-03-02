@@ -7,8 +7,6 @@ interface Props {
   quantity: number;
   onAdd: () => void;
   onQuantityChange: (qty: number) => void;
-  dryerVentLocations?: Record<string, number>;
-  onDryerVentLocationChange?: (id: string, qty: number) => void;
 }
 
 export default function ExtraCard({
@@ -16,19 +14,11 @@ export default function ExtraCard({
   quantity,
   onAdd,
   onQuantityChange,
-  dryerVentLocations = {},
-  onDryerVentLocationChange,
 }: Props) {
   const { t, lang } = useLang();
   const [imgError, setImgError] = useState(false);
 
-  const hasDryerLocations = !!extra.dryerLocations?.length;
-  const dryerTotal = hasDryerLocations
-    ? extra.dryerLocations!.reduce((sum, loc) => sum + loc.price * (dryerVentLocations[loc.id] ?? 0), 0)
-    : 0;
-  const isSelected = hasDryerLocations
-    ? dryerTotal > 0
-    : quantity > 0;
+  const isSelected = quantity > 0;
 
   return (
     <div
@@ -90,44 +80,7 @@ export default function ExtraCard({
         <p className="text-xs text-blue-700 leading-snug mb-4 flex-1">{t(extra.description)}</p>
 
         {/* Action area */}
-        {hasDryerLocations ? (
-          /* Dryer vent location steppers */
-          <div className="border-t border-gray-100 pt-3">
-            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">
-              {lang === 'en'
-                ? 'Where is the dryer exhaust duct located outside?'
-                : 'Où est situé le conduit d\'évacuation à l\'extérieur?'}
-            </p>
-            <div className="space-y-2">
-              {extra.dryerLocations!.map((loc) => {
-                const qty = dryerVentLocations[loc.id] ?? 0;
-                return (
-                  <div key={loc.id} className="flex items-center justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="text-xs text-gray-700 leading-snug">{t(loc.label)}</p>
-                      <p className="text-xs text-blue-600 font-semibold">${loc.price.toFixed(2)}</p>
-                    </div>
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      <button
-                        onClick={() => onDryerVentLocationChange?.(loc.id, Math.max(0, qty - 1))}
-                        className="w-7 h-7 rounded border border-gray-300 flex items-center justify-center text-gray-600 hover:border-blue-500 hover:text-blue-600 transition-colors font-medium"
-                      >
-                        −
-                      </button>
-                      <span className="w-5 text-center font-semibold text-sm">{qty}</span>
-                      <button
-                        onClick={() => onDryerVentLocationChange?.(loc.id, qty + 1)}
-                        className="w-7 h-7 rounded border border-gray-300 flex items-center justify-center text-gray-600 hover:border-blue-500 hover:text-blue-600 transition-colors font-medium"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ) : isSelected && extra.hasQuantity ? (
+        {isSelected && extra.hasQuantity ? (
           <div className="flex items-center justify-between border-t border-gray-100 pt-3">
             <span className="text-xs font-semibold text-gray-600">
               {lang === 'en' ? 'Quantity Required:' : 'Quantité requise:'}

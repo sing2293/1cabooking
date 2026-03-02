@@ -140,7 +140,7 @@ export const SERVICES: ServiceCategory[] = [
       {
         id: 'wall-unit-cleaning',
         name: { en: 'Wall Unit (Mini-Split)', fr: 'Unité murale (Mini-Split)' },
-        price: 350,
+        price: 349,
         description: {
           en: 'Eliminate hidden mold and restore peak efficiency. This specialized deep cleaning service uses foaming antimicrobial agents to sanitize the coil and remove biological buildup from the internal scroll fan.',
           fr: 'Éliminez les moisissures cachées et restaurez l\'efficacité maximale. Ce service de nettoyage en profondeur utilise des agents antimicrobiens moussants pour assainir la bobine et éliminer les dépôts biologiques.',
@@ -167,7 +167,7 @@ export const SERVICES: ServiceCategory[] = [
       {
         id: 'dryer-vent-cleaning',
         name: { en: 'Dryer Vent Cleaning', fr: 'Nettoyage conduit sèche-linge' },
-        price: 200,
+        price: 199,
         priceLabel: { en: 'STARTING AT', fr: 'À PARTIR DE' },
         description: {
           en: 'Complete Fire Safety: We clean the entire vent line exclusively from the exterior using specialized, non-abrasive technology. This process reaches the dryer wall to safely eliminate hidden lint hazards.',
@@ -178,12 +178,12 @@ export const SERVICES: ServiceCategory[] = [
           { en: 'Exterior Vent Cover Cleaning', fr: 'Nettoyage de la grille d\'aération extérieure' },
         ],
         dryerLocations: [
-          { id: 'ground', label: { en: 'Ground level (No ladder)', fr: 'Niveau du sol (sans échelle)' }, price: 200 },
-          { id: 'under-deck', label: { en: 'Under Deck (3\' min clearance)', fr: 'Sous terrasse (3\' min)' }, price: 250 },
-          { id: 'small-ladder', label: { en: 'Small Ladder (14 foot)', fr: 'Petite échelle (14 pieds)' }, price: 250 },
-          { id: 'big-ladder', label: { en: 'Big Ladder (22 foot)', fr: 'Grande échelle (22 pieds)' }, price: 300 },
-          { id: 'rooftop', label: { en: 'Rooftop / Difficult Access (Access Provided)', fr: 'Toit / Accès difficile (accès fourni)' }, price: 350 },
-          { id: 'inside-only', label: { en: 'Inside Only – No Exterior Access', fr: 'Intérieur seulement – Sans accès extérieur' }, price: 250 },
+          { id: 'ground',       label: { en: 'Ground level (No ladder)',                    fr: 'Niveau du sol (sans échelle)'           }, price: 199 },
+          { id: 'under-deck',   label: { en: "Under Deck (3' min clearance)",               fr: "Sous la terrasse (3' min)"              }, price: 219 },
+          { id: 'small-ladder', label: { en: 'Small Ladder (14 foot)',                      fr: 'Petite échelle (14 pieds)'              }, price: 219 },
+          { id: 'big-ladder',   label: { en: 'Big Ladder (22 foot)',                        fr: 'Grande échelle (22 pieds)'              }, price: 299 },
+          { id: 'rooftop',      label: { en: 'Rooftop / Difficult Access (Access Provided)',fr: 'Toit / Accès difficile (accès fourni)'  }, price: 349 },
+          { id: 'inside-only',  label: { en: 'Inside Only – No Exterior Access',            fr: 'Intérieur seulement – Sans accès ext.'  }, price: 199 },
         ],
         image: '/images/dryer-vent.jpg',
       },
@@ -198,7 +198,7 @@ export const SERVICES: ServiceCategory[] = [
       {
         id: 'air-exchanger-cleaning',
         name: { en: 'Air Exchanger Cleaning', fr: 'Nettoyage échangeur d\'air' },
-        price: 350,
+        price: 349,
         priceNote: { en: '+ VENTS', fr: '+ BOUCHES' },
         description: {
           en: 'Standalone cleaning for HRV/ERV units and dedicated ducts. Ideal for homes with electric heating.',
@@ -250,7 +250,7 @@ export const SERVICES: ServiceCategory[] = [
       {
         id: 'furnace-blower',
         name: { en: 'Furnace / Air Handling Unit (Blower & Motor Cleaning)', fr: 'Fournaise / Unité de traitement d\'air (nettoyage soufflante et moteur)' },
-        price: 250,
+        price: 249,
         description: {
           en: 'We use a dual Brush & Air Wash method to strip away settled dust and allergens from the blower and motor housing. By removing these contaminants at the source, we ensure they aren\'t recirculated into your home, providing you with the cleanest air possible.',
           fr: 'Nous utilisons une méthode double brosse et lavage à l\'air pour éliminer la poussière et les allergènes du logement de la soufflante et du moteur.',
@@ -266,7 +266,7 @@ export const SERVICES: ServiceCategory[] = [
       {
         id: 'indoor-coil',
         name: { en: 'Indoor Unit Coil (Internal System Cleaning)', fr: 'Bobine unité intérieure (nettoyage système interne)' },
-        price: 250,
+        price: 249,
         description: {
           en: 'We clean this internal "radiator" because it acts as a primary dust trap for your entire home. Since all heated and cooled air must pass through these fins, removing the buildup at the source is essential for maintaining superior air quality and unrestricted airflow.',
           fr: 'Nous nettoyons ce "radiateur" interne car il agit comme un piège à poussière principal pour toute votre maison. Tout l\'air chauffé et refroidi passe par ces ailettes.',
@@ -283,7 +283,7 @@ export const SERVICES: ServiceCategory[] = [
       {
         id: 'outdoor-heat-pump',
         name: { en: 'Outdoor Heat Pump & Condenser Cleaning', fr: 'Nettoyage pompe à chaleur extérieure et condenseur' },
-        price: 250,
+        price: 249,
         description: {
           en: 'We deep-clean the exterior heat pump fins to remove dirt, pollen, and debris that block heat transfer. Since this unit is responsible for releasing or absorbing heat for your entire home, keeping these coils clear is essential for maximizing energy efficiency and preventing system strain.',
           fr: 'Nous nettoyons en profondeur les ailettes de la pompe à chaleur extérieure pour éliminer la saleté, le pollen et les débris qui bloquent le transfert de chaleur.',
@@ -318,7 +318,6 @@ export const SERVICES: ServiceCategory[] = [
           { en: 'Hot Water Extraction (Steam Cleaning)', fr: 'Extraction à l\'eau chaude (nettoyage vapeur)' },
           { en: 'Pre-treatment for stains & high-traffic areas', fr: 'Pré-traitement des taches et zones à fort passage' },
           { en: 'Deodorizing treatment included', fr: 'Traitement désodorisant inclus' },
-          { en: 'NADCA Certified Technicians', fr: 'Techniciens certifiés NADCA' },
           { en: '30-Day Satisfaction Guarantee', fr: 'Garantie de satisfaction 30 jours' },
         ],
         image: '/images/carpet.jpg',
