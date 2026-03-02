@@ -7,10 +7,16 @@ interface Props {
   onExtrasChange: (extras: Record<string, number>) => void;
   dryerVentLocations: Record<string, number>;
   onDryerVentLocationChange: (id: string, qty: number) => void;
+  categoryId: string | null;
 }
 
-export default function Step2({ selectedExtras, onExtrasChange, dryerVentLocations, onDryerVentLocationChange }: Props) {
+export default function Step2({ selectedExtras, onExtrasChange, dryerVentLocations, onDryerVentLocationChange, categoryId }: Props) {
   const { lang } = useLang();
+  const isCarpet = categoryId === 'carpet';
+
+  const visibleExtras = EXTRAS.filter((e) =>
+    isCarpet ? e.forCategory === 'carpet' : !e.forCategory
+  );
 
   const handleAdd = (id: string, hasQty: boolean) => {
     onExtrasChange({ ...selectedExtras, [id]: hasQty ? 1 : 1 });
@@ -29,29 +35,48 @@ export default function Step2({ selectedExtras, onExtrasChange, dryerVentLocatio
   return (
     <div>
       <h2 className="text-2xl font-bold text-gray-800 mb-4">
-        {lang === 'en' ? '2. Select Extra Services (Optional)' : '2. Sélectionner des services supplémentaires (facultatif)'}
+        {isCarpet
+          ? (lang === 'en' ? '2. Select Items to Clean' : '2. Sélectionner les articles à nettoyer')
+          : (lang === 'en' ? '2. Select Extra Services (Optional)' : '2. Sélectionner des services supplémentaires (facultatif)')}
       </h2>
 
-      {/* Bundle value pricing banner */}
-      <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3 mb-6">
-        <div className="bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center shrink-0 mt-0.5">
-          <span className="text-xs font-bold">+</span>
+      {isCarpet ? (
+        <div className="flex items-start gap-3 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 mb-6">
+          <div className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center shrink-0 mt-0.5">
+            <span className="text-xs font-bold">$</span>
+          </div>
+          <div>
+            <p className="text-sm font-bold text-gray-800">
+              {lang === 'en' ? 'PRICED PER ITEM' : 'PRIX PAR ARTICLE'}
+            </p>
+            <p className="text-xs text-gray-600 mt-0.5">
+              {lang === 'en'
+                ? 'Select the quantity of each item you\'d like cleaned.'
+                : 'Sélectionnez la quantité de chaque article à nettoyer.'}
+            </p>
+          </div>
         </div>
-        <div>
-          <p className="text-sm font-bold text-gray-800">
-            {lang === 'en' ? 'BUNDLE VALUE PRICING' : 'PRIX FORFAIT GROUPÉ'}
-          </p>
-          <p className="text-xs text-gray-600 mt-0.5">
-            {lang === 'en'
-              ? 'Rates shown are locked for this specific primary service.'
-              : 'Les tarifs affichés sont fixés pour ce service principal spécifique.'}
-          </p>
+      ) : (
+        <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3 mb-6">
+          <div className="bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center shrink-0 mt-0.5">
+            <span className="text-xs font-bold">+</span>
+          </div>
+          <div>
+            <p className="text-sm font-bold text-gray-800">
+              {lang === 'en' ? 'BUNDLE VALUE PRICING' : 'PRIX FORFAIT GROUPÉ'}
+            </p>
+            <p className="text-xs text-gray-600 mt-0.5">
+              {lang === 'en'
+                ? 'Rates shown are locked for this specific primary service.'
+                : 'Les tarifs affichés sont fixés pour ce service principal spécifique.'}
+            </p>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 2-column grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {EXTRAS.map((extra) => (
+        {visibleExtras.map((extra) => (
           <ExtraCard
             key={extra.id}
             extra={extra}

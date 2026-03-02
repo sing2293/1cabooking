@@ -16,6 +16,7 @@ export interface Extra {
   hasQuantity: boolean;
   image?: string;
   dryerLocations?: DryerLocation[];
+  forCategory?: string; // if set, only shown when this service category is selected
 }
 
 export const EXTENDED_COVERAGE = 8.59;
@@ -138,5 +139,85 @@ export const EXTRAS: Extra[] = [
     bundlePrice: 25,
     hasQuantity: true,
     image: '/images/bathroom-fan.jpg',
+  },
+
+  /* ── Carpet & Upholstery items (only shown for carpet category) ── */
+  {
+    id: 'carpet-room',
+    name: { en: 'Room (up to 200 sq ft)', fr: 'Pièce (jusqu\'à 200 pi²)' },
+    description: { en: 'Standard room carpet cleaning up to 200 sq ft.', fr: 'Nettoyage de tapis pour pièce standard jusqu\'à 200 pi².' },
+    originalPrice: 49, bundlePrice: 49, hasQuantity: true, forCategory: 'carpet',
+  },
+  {
+    id: 'carpet-bath-laundry',
+    name: { en: 'Bath / Laundry', fr: 'Bain / Buanderie' },
+    description: { en: 'Carpet or mat cleaning in bathroom or laundry room.', fr: 'Nettoyage tapis salle de bain ou buanderie.' },
+    originalPrice: 26, bundlePrice: 26, hasQuantity: true, forCategory: 'carpet',
+  },
+  {
+    id: 'carpet-entry-hall',
+    name: { en: 'Entry / Hall', fr: 'Entrée / Couloir' },
+    description: { en: 'Entryway or hallway carpet cleaning.', fr: 'Nettoyage tapis d\'entrée ou couloir.' },
+    originalPrice: 26, bundlePrice: 26, hasQuantity: true, forCategory: 'carpet',
+  },
+  {
+    id: 'carpet-staircase',
+    name: { en: 'Staircase', fr: 'Escalier' },
+    description: { en: 'Full staircase carpet cleaning.', fr: 'Nettoyage complet du tapis d\'escalier.' },
+    originalPrice: 56, bundlePrice: 56, hasQuantity: true, forCategory: 'carpet',
+  },
+  {
+    id: 'carpet-sofa',
+    name: { en: 'Sofa', fr: 'Sofa' },
+    description: { en: 'Upholstery cleaning for a standard sofa.', fr: 'Nettoyage tissu pour sofa standard.' },
+    originalPrice: 89, bundlePrice: 89, hasQuantity: true, forCategory: 'carpet',
+  },
+  {
+    id: 'carpet-sofa-large',
+    name: { en: 'Sofa (Over 7ft)', fr: 'Sofa (Plus de 7 pi)' },
+    description: { en: 'Upholstery cleaning for an oversized sofa over 7ft.', fr: 'Nettoyage tissu pour grand sofa de plus de 7 pi.' },
+    originalPrice: 127, bundlePrice: 127, hasQuantity: true, forCategory: 'carpet',
+  },
+  {
+    id: 'carpet-sectional',
+    name: { en: 'Sectional', fr: 'Sectionnel' },
+    description: { en: 'Full sectional sofa upholstery cleaning.', fr: 'Nettoyage tissu pour sofa sectionnel complet.' },
+    originalPrice: 195, bundlePrice: 195, hasQuantity: true, forCategory: 'carpet',
+  },
+  {
+    id: 'carpet-sectional-large',
+    name: { en: 'Sectional (Over 12ft)', fr: 'Sectionnel (Plus de 12 pi)' },
+    description: { en: 'Upholstery cleaning for oversized sectional over 12ft.', fr: 'Nettoyage tissu pour grand sectionnel de plus de 12 pi.' },
+    originalPrice: 255, bundlePrice: 255, hasQuantity: true, forCategory: 'carpet',
+  },
+  {
+    id: 'carpet-loveseat',
+    name: { en: 'Loveseat (2 seats)', fr: 'Causeuse (2 places)' },
+    description: { en: 'Upholstery cleaning for a loveseat.', fr: 'Nettoyage tissu pour causeuse.' },
+    originalPrice: 89, bundlePrice: 89, hasQuantity: true, forCategory: 'carpet',
+  },
+  {
+    id: 'carpet-chair',
+    name: { en: 'Chair', fr: 'Chaise' },
+    description: { en: 'Upholstery cleaning for an armchair.', fr: 'Nettoyage tissu pour fauteuil.' },
+    originalPrice: 49, bundlePrice: 49, hasQuantity: true, forCategory: 'carpet',
+  },
+  {
+    id: 'carpet-ottoman',
+    name: { en: 'Ottoman', fr: 'Pouf' },
+    description: { en: 'Upholstery cleaning for an ottoman.', fr: 'Nettoyage tissu pour pouf.' },
+    originalPrice: 14, bundlePrice: 14, hasQuantity: true, forCategory: 'carpet',
+  },
+  {
+    id: 'carpet-dining-chair',
+    name: { en: 'Dining Room Chair', fr: 'Chaise de salle à manger' },
+    description: { en: 'Upholstery cleaning for a dining room chair.', fr: 'Nettoyage tissu pour chaise de salle à manger.' },
+    originalPrice: 31, bundlePrice: 31, hasQuantity: true, forCategory: 'carpet',
+  },
+  {
+    id: 'carpet-chaise',
+    name: { en: 'Chaise', fr: 'Chaise longue' },
+    description: { en: 'Upholstery cleaning for a chaise lounge.', fr: 'Nettoyage tissu pour chaise longue.' },
+    originalPrice: 59, bundlePrice: 59, hasQuantity: true, forCategory: 'carpet',
   },
 ];

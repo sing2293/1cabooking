@@ -341,6 +341,7 @@ function BookingApp() {
                   onExtrasChange={setSelectedExtras}
                   dryerVentLocations={dryerVentLocations}
                   onDryerVentLocationChange={handleDryerVentLocationChange}
+                  categoryId={step1Data.categoryId}
                 />
               )}
               {currentStep === 3 && (
