@@ -19,9 +19,7 @@ export const EMPTY_STEP4: Step4Data = {
 /* ── Raw types from backend ── */
 export interface RawSlot { label: string; start: string; end: string; }
 export interface RawDay  { date: string; slots: RawSlot[]; }
-const SLOT_BLOCKS_NEEDED = 2;
-
-/* ── Merge consecutive 1-hour raw slots into 2-hour blocks ── */
+/* ── Merge consecutive 1-hour raw slots into N-hour blocks ── */
 export function to12Hour(time24: string): string {
   const [h, m] = time24.trim().split(':').map(Number);
   const suffix = h >= 12 ? 'PM' : 'AM';
@@ -29,13 +27,13 @@ export function to12Hour(time24: string): string {
   return `${hour}:${String(m).padStart(2, '0')} ${suffix}`;
 }
 
-export function mergeSlots(rawSlots: RawSlot[]): AppSlot[] {
+export function mergeSlots(rawSlots: RawSlot[], blocksNeeded = 2): AppSlot[] {
   const out: AppSlot[] = [];
-  for (let i = 0; i <= rawSlots.length - SLOT_BLOCKS_NEEDED; i++) {
+  for (let i = 0; i <= rawSlots.length - blocksNeeded; i++) {
     const first = rawSlots[i];
     let ok = true;
     let end = first.end;
-    for (let k = 1; k < SLOT_BLOCKS_NEEDED; k++) {
+    for (let k = 1; k < blocksNeeded; k++) {
       const prev = rawSlots[i + k - 1];
       const cur  = rawSlots[i + k];
       if (!cur || prev.end !== cur.start) { ok = false; break; }

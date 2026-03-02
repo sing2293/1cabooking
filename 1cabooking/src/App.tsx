@@ -59,6 +59,9 @@ function BookingApp() {
   const [availError, setAvailError]     = useState<string | null>(null);
   const [availFetched, setAvailFetched] = useState(false);
 
+  /* 1-hour jobs: dryer-vent standalone, carpet. Everything else = 2-hour block */
+  const slotsNeeded = (step1Data.categoryId === 'dryer-vent' || step1Data.categoryId === 'carpet') ? 1 : 2;
+
   /* Reset availability when service type switches (e.g. carpet ↔ duct) */
   useEffect(() => {
     setAvailFetched(false);
@@ -95,7 +98,7 @@ function BookingApp() {
       .then((json) => {
         const rawDays: RawDay[] = json.days || [];
         const mapped: DayAvailability[] = rawDays
-          .map((d) => ({ date: d.date, slots: mergeSlots(d.slots || []) }))
+          .map((d) => ({ date: d.date, slots: mergeSlots(d.slots || [], slotsNeeded) }))
           .filter((d) => d.slots.length > 0)
           .filter((d) => {
             const [y, m, day] = d.date.split('-').map(Number);
