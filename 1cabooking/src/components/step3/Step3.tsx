@@ -132,6 +132,11 @@ export default function Step3({ data, onChange }: Props) {
               onChange={(e) => set('email', e.target.value)}
               className={inputCls}
             />
+            {data.email.trim() !== '' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim()) && (
+              <p className="text-xs text-red-500 mt-1">
+                {lang === 'en' ? 'Please enter a valid email address.' : 'Veuillez entrer une adresse courriel valide.'}
+              </p>
+            )}
           </Field>
 
           <Field label={lang === 'en' ? 'Cell Phone' : 'Téléphone cellulaire'} required>

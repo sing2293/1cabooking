@@ -19,24 +19,24 @@ export default function Header() {
         <div className="flex items-center border border-slate-600 rounded-lg overflow-hidden text-xs sm:text-sm font-semibold">
           <button
             onClick={() => setLang('en')}
-            className={`px-3 sm:px-4 py-2 flex items-center gap-1.5 transition-colors ${
+            className={`px-3 sm:px-4 py-2 transition-colors ${
               lang === 'en'
                 ? 'bg-blue-600 text-white'
                 : 'bg-transparent text-slate-300 hover:bg-slate-800'
             }`}
           >
-            <span className="text-sm">🇬🇧</span> EN
+            EN
           </button>
           <div className="w-px h-5 bg-slate-600" />
           <button
             onClick={() => setLang('fr')}
-            className={`px-3 sm:px-4 py-2 flex items-center gap-1.5 transition-colors ${
+            className={`px-3 sm:px-4 py-2 transition-colors ${
               lang === 'fr'
                 ? 'bg-blue-600 text-white'
                 : 'bg-transparent text-slate-300 hover:bg-slate-800'
             }`}
           >
-            <span className="text-sm">🇫🇷</span> FR
+            FR
           </button>
         </div>
       </div>

@@ -145,7 +145,7 @@ function BookingApp() {
   /* ── Step validation ── */
   const step3Valid =
     step3Data.fullName.trim() !== '' &&
-    step3Data.email.trim() !== '' &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(step3Data.email.trim()) &&
     step3Data.phone.replace(/\D/g, '').length === 10 &&
     step3Data.streetAddress.trim() !== '' &&
     step3Data.province !== '' &&
