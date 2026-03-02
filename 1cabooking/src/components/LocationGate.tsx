@@ -65,12 +65,24 @@ export default function LocationGate({ onConfirm }: Props) {
   const [region, setRegion]       = useState<'ottawa' | 'montreal' | '' | null>(null); // null = not checked, '' = not served
   const [inputVal, setInputVal]   = useState('');
 
-  /* ── Load Google Maps script once ── */
+  /* ── Wait for Google Maps (loaded via index.html script tag) ── */
   useEffect(() => {
-    const apiKey = import.meta.env.VITE_PLACES_API_KEY as string | undefined;
-    if (!apiKey) { setMapsReady(true); return; }
-    if ((window as AnyWindow).google?.maps?.places) { setMapsReady(true); return; }
+    // Already loaded (cached on second visit)
+    if ((window as AnyWindow).google?.maps?.places) {
+      setMapsReady(true);
+      return;
+    }
 
+    const apiKey = import.meta.env.VITE_PLACES_API_KEY as string | undefined;
+
+    if (!apiKey) {
+      // Key is injected via index.html — wait for its callback event
+      const handler = () => setMapsReady(true);
+      window.addEventListener('googleMapsLoaded', handler, { once: true });
+      return () => window.removeEventListener('googleMapsLoaded', handler);
+    }
+
+    // Fallback: load script dynamically when env var is provided
     const cb = '__gmapsLoaded';
     (window as AnyWindow)[cb] = () => setMapsReady(true);
 
