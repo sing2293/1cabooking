@@ -59,7 +59,7 @@ export default function AddressAutocomplete({ value, onChange, placeholder, clas
     <input
       ref={inputRef}
       type="text"
-      defaultValue={value}
+      value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       className={className}

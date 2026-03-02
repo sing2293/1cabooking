@@ -326,7 +326,11 @@ function BookingApp() {
         <Header />
         <LocationGate onConfirm={(r, _city, address) => {
           setRegion(r);
-          setStep3Data((prev) => ({ ...prev, streetAddress: address }));
+          setStep3Data((prev) => ({
+            ...prev,
+            streetAddress: address,
+            province: r === 'ottawa' ? 'Ontario' : 'Québec',
+          }));
           setLocationConfirmed(true);
         }} />
       </div>
