@@ -1,4 +1,4 @@
-type IconType = 'central-air' | 'wall-unit' | 'dryer' | 'air-exchanger' | 'specialty';
+type IconType = 'central-air' | 'wall-unit' | 'dryer' | 'air-exchanger' | 'specialty' | 'carpet';
 
 interface Props {
   type: IconType;
@@ -34,6 +34,16 @@ export default function ServiceIcon({ type, className = '' }: Props) {
       <svg className={base} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
         <path d="M3 3v5h5"/>
+      </svg>
+    );
+  }
+  if (type === 'carpet') {
+    return (
+      <svg className={base} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="6" width="20" height="12" rx="2"/>
+        <path d="M6 6V4M10 6V4M14 6V4M18 6V4"/>
+        <path d="M6 18v2M10 18v2M14 18v2M18 18v2"/>
+        <path d="M2 12h20"/>
       </svg>
     );
   }

@@ -45,11 +45,21 @@ function BookingApp() {
   const [locationConfirmed, setLocationConfirmed] = useState(false);
   const [region, setRegion]                       = useState<'ottawa' | 'montreal' | ''>('');
 
+  /* Carpet service uses its own truck pool regardless of geo-region */
+  const effectiveRegion = step1Data.categoryId === 'carpet' ? 'carpet' : region;
+
   /* ── Availability prefetch (starts at Step 2) ── */
   const [availDays, setAvailDays]       = useState<DayAvailability[]>([]);
   const [availLoading, setAvailLoading] = useState(false);
   const [availError, setAvailError]     = useState<string | null>(null);
   const [availFetched, setAvailFetched] = useState(false);
+
+  /* Reset availability when service type switches (e.g. carpet ↔ duct) */
+  useEffect(() => {
+    setAvailFetched(false);
+    setAvailDays([]);
+    setAvailError(null);
+  }, [step1Data.categoryId]);
 
   useEffect(() => {
     if (currentStep < 2 || availFetched) return;
@@ -69,7 +79,7 @@ function BookingApp() {
         workStart:       '08:00',
         workEnd:         '16:00',
         slotStepMinutes: 60,
-        region,
+        region:          effectiveRegion,
       }),
     })
       .then(async (r) => {
@@ -90,7 +100,7 @@ function BookingApp() {
       })
       .catch((e: Error) => setAvailError(e.message))
       .finally(() => setAvailLoading(false));
-  }, [currentStep, availFetched, region]);
+  }, [currentStep, availFetched, effectiveRegion]);
 
   /* ── Booking state ── */
   const [bookState, setBookState]   = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
@@ -213,7 +223,7 @@ function BookingApp() {
           email:        step3Data.email,
           address:      step3Data.streetAddress,
           notes:        buildNotes(),
-          region,
+          region:       effectiveRegion,
         }),
       });
 

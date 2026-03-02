@@ -32,7 +32,7 @@ export interface ServiceCategory {
   id: string;
   name: T;
   description: T;
-  icon: 'central-air' | 'wall-unit' | 'dryer' | 'air-exchanger' | 'specialty';
+  icon: 'central-air' | 'wall-unit' | 'dryer' | 'air-exchanger' | 'specialty' | 'carpet';
   mostPopular?: boolean;
   packages: ServicePackage[];
 }
@@ -69,12 +69,11 @@ export const SERVICES: ServiceCategory[] = [
           { en: 'Furnace Coil Cleaning (Air/Brush method)', fr: 'Nettoyage bobines de fournaise (méthode air/brosse)' },
           { en: 'Air Exchanger Cleaning', fr: 'Nettoyage de l\'échangeur d\'air' },
           { en: 'Dryer Vent Cleaning (Ground-level access only)', fr: 'Nettoyage sèche-linge (accès au sol seulement)' },
-          { en: 'Bathroom Exhaust Fans (2 included)', fr: 'Ventilateurs de salle de bain (2 inclus)' },
           { en: 'Upgraded Future Bonus: Save $55', fr: 'Bonus futur amélioré: Économisez 55$' },
-          { en: 'Dust, Air Flow Test & Fresh Air Scan ($200 Value) (1 Room)', fr: 'Analyse poussière, test débit d\'air & air frais (200$) (1 pièce)' },
+          { en: 'Dust & Air Flow Test Scan ($100 Value)', fr: 'Analyse poussière & test débit d\'air (valeur 100$)' },
         ],
         scanBanner: {
-          text: { en: 'DUST LEVEL + AIR FLOW TEST + FRESH AIR LEVEL SCAN INCLUDED ($200 VALUE)', fr: 'ANALYSE POUSSIÈRE + TEST DÉBIT D\'AIR + AIR FRAIS INCLUSE (VALEUR 200$)' },
+          text: { en: 'DUST LEVEL + AIR FLOW TEST SCAN INCLUDED ($100 VALUE)', fr: 'ANALYSE POUSSIÈRE + TEST DÉBIT D\'AIR INCLUSE (VALEUR 100$)' },
           color: 'green',
         },
         hasVentCount: true,
@@ -99,10 +98,10 @@ export const SERVICES: ServiceCategory[] = [
           { en: 'Free Benefect Disinfection (Value $100)', fr: 'Désinfection Benefect gratuite (valeur 100$)' },
           { en: 'Blower + Motor Cleaning (Air/Brush method)', fr: 'Nettoyage soufflante + moteur (méthode air/brosse)' },
           { en: 'Upgraded Future Bonus: Save $35', fr: 'Bonus futur amélioré: Économisez 35$' },
-          { en: 'Dust & Air Flow Test Scan ($150 Value) (1 Room)', fr: 'Analyse poussière & test débit d\'air (150$) (1 pièce)' },
+          { en: 'Dust & Air Flow Test Scan ($100 Value)', fr: 'Analyse poussière & test débit d\'air (valeur 100$)' },
         ],
         scanBanner: {
-          text: { en: 'DUST LEVEL + AIR FLOW TEST SCAN INCLUDED ($150 VALUE)', fr: 'ANALYSE POUSSIÈRE + TEST DÉBIT D\'AIR INCLUSE (VALEUR 150$)' },
+          text: { en: 'DUST LEVEL + AIR FLOW TEST SCAN INCLUDED ($100 VALUE)', fr: 'ANALYSE POUSSIÈRE + TEST DÉBIT D\'AIR INCLUSE (VALEUR 100$)' },
           color: 'navy',
         },
         hasVentCount: true,
@@ -124,14 +123,8 @@ export const SERVICES: ServiceCategory[] = [
           { en: 'Furnace Cabinet Clean & Check', fr: 'Nettoyage et vérification du cabinet de fournaise' },
           { en: 'NADCA Certified Technicians', fr: 'Techniciens certifiés NADCA' },
           { en: '30-Day Satisfaction Guarantee', fr: 'Garantie de satisfaction 30 jours' },
-          { en: 'Free Benefect Disinfection (Value $100)', fr: 'Désinfection Benefect gratuite (valeur 100$)' },
-          { en: 'Dust Level Air Scan ($100 Value) (1 Room)', fr: 'Analyse niveau de poussière (100$) (1 pièce)' },
           { en: 'Future Bonus: Save $25', fr: 'Bonus futur: Économisez 25$' },
         ],
-        scanBanner: {
-          text: { en: 'DUST LEVEL SCAN INCLUDED ($100 VALUE)', fr: 'ANALYSE NIVEAU POUSSIÈRE INCLUSE (VALEUR 100$)' },
-          color: 'navy',
-        },
         hasVentCount: true,
         unitLabel: { en: 'furnaces', fr: 'fournaises' },
         image: '/images/basic.jpg',
@@ -147,7 +140,7 @@ export const SERVICES: ServiceCategory[] = [
       {
         id: 'wall-unit-cleaning',
         name: { en: 'Wall Unit (Mini-Split)', fr: 'Unité murale (Mini-Split)' },
-        price: 250,
+        price: 350,
         description: {
           en: 'Eliminate hidden mold and restore peak efficiency. This specialized deep cleaning service uses foaming antimicrobial agents to sanitize the coil and remove biological buildup from the internal scroll fan.',
           fr: 'Éliminez les moisissures cachées et restaurez l\'efficacité maximale. Ce service de nettoyage en profondeur utilise des agents antimicrobiens moussants pour assainir la bobine et éliminer les dépôts biologiques.',
@@ -158,7 +151,7 @@ export const SERVICES: ServiceCategory[] = [
           { en: 'Cabinet Casing, Fan, and Drain Pan Cleaned', fr: 'Boîtier, ventilateur et bac d\'égouttement nettoyés' },
           { en: 'Filter Disinfection', fr: 'Désinfection du filtre' },
           { en: 'Exterior Condenser Unit Cleaned', fr: 'Unité condensatrice extérieure nettoyée' },
-          { en: 'Free Dust Scan (1 Room, Value $100)', fr: 'Analyse de poussière gratuite (1 pièce, valeur 100$)' },
+          { en: 'Air Flow Test (Value $100)', fr: 'Test débit d\'air (valeur 100$)' },
         ],
         unitLabel: { en: 'units', fr: 'unités' },
         image: '/images/wall-unit.jpg',
@@ -303,6 +296,32 @@ export const SERVICES: ServiceCategory[] = [
         ],
         unitLabel: { en: 'units', fr: 'unités' },
         image: '/images/outdoor-heat-pump.jpg',
+      },
+    ],
+  },
+  {
+    id: 'carpet',
+    name: { en: 'Carpet & Upholstery Cleaning', fr: 'Nettoyage tapis et tissu d\'ameublement' },
+    description: { en: 'Deep steam cleaning for carpets, rugs & furniture.', fr: 'Nettoyage vapeur en profondeur pour tapis et meubles.' },
+    icon: 'carpet',
+    packages: [
+      {
+        id: 'carpet-cleaning',
+        name: { en: 'Carpet & Upholstery Cleaning', fr: 'Nettoyage tapis et tissu' },
+        price: 0,
+        priceLabel: { en: 'PRICED BY ITEM', fr: 'PRIX PAR ARTICLE' },
+        description: {
+          en: 'Professional hot water extraction cleaning for carpets, area rugs, and upholstered furniture. Pricing is based on the items and areas being cleaned — select your items at the next step.',
+          fr: 'Nettoyage professionnel par extraction à l\'eau chaude pour tapis, carpettes et meubles rembourrés. Le prix est basé sur les articles et zones à nettoyer — sélectionnez vos articles à l\'étape suivante.',
+        },
+        includes: [
+          { en: 'Hot Water Extraction (Steam Cleaning)', fr: 'Extraction à l\'eau chaude (nettoyage vapeur)' },
+          { en: 'Pre-treatment for stains & high-traffic areas', fr: 'Pré-traitement des taches et zones à fort passage' },
+          { en: 'Deodorizing treatment included', fr: 'Traitement désodorisant inclus' },
+          { en: 'NADCA Certified Technicians', fr: 'Techniciens certifiés NADCA' },
+          { en: '30-Day Satisfaction Guarantee', fr: 'Garantie de satisfaction 30 jours' },
+        ],
+        image: '/images/carpet.jpg',
       },
     ],
   },
