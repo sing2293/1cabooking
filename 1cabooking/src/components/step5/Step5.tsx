@@ -146,7 +146,7 @@ export default function Step5({ step1, step3, step4, selectedExtras, dryerVentLo
                   {lang === 'en' ? 'Plus Vents (TBD)' : 'Plus bouches (À déterminer)'}
                 </span>
               ) : (
-                <span className="text-xs text-gray-600">{step1.ventCount} × $5.00</span>
+                <span className="text-xs text-gray-600">{step1.ventCount} × $15.00</span>
               )}
             </div>
 

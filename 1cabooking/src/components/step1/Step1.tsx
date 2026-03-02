@@ -122,8 +122,8 @@ export default function Step1({ onSelectionChange }: Props) {
       if (pkg.hasVentCount && vModes[pkgId] === 'known') {
         const vents = vCounts[pkgId] ?? 0;
         if (vents > 0) {
-          lines.push({ label: `Vents × ${vents}`, amount: vents * 5 });
-          subtotal += vents * 5;
+          lines.push({ label: `Vents × ${vents}`, amount: vents * 15 });
+          subtotal += vents * 15;
         }
       }
     }

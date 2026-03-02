@@ -114,7 +114,7 @@ export default function ServiceSummary({
                 {lang === 'en' ? 'Plus Vents (TBD)' : 'Plus bouches (À déterminer)'}
               </span>
             ) : (
-              <span className="text-[11px] text-gray-600">{step1.ventCount} × $5.00</span>
+              <span className="text-[11px] text-gray-600">{step1.ventCount} × $15.00</span>
             )}
           </div>
         </div>
