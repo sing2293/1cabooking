@@ -16,7 +16,7 @@ import { captureTrackingData, generateEventId } from './utils/tracking';
 
 const BACKEND_URL = '';  // always use /api/* — Vite proxy in dev, Vercel functions in prod
 const API_SECRET  = '1cleanAir_2026_dispatch_secure_X9d83jsk29DKL';
-const N8N_WEBHOOK = 'https://anuj1cleanair.app.n8n.cloud/webhook-test/1c861c48-42c0-40ce-af78-b4b0b274cc24'; // ← paste your n8n webhook URL here
+const N8N_WEBHOOK: string = 'https://anuj1cleanair.app.n8n.cloud/webhook-test/1c861c48-42c0-40ce-af78-b4b0b274cc24'; // ← paste your n8n webhook URL here
 
 const EMPTY_STEP1: Step1Selection = {
   isValid: false,
