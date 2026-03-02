@@ -10,7 +10,9 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>('en');
+  const [lang, setLang] = useState<Lang>(
+    window.location.pathname.startsWith('/fr') ? 'fr' : 'en'
+  );
 
   const t = (text: Record<Lang, string>) => text[lang];
 
