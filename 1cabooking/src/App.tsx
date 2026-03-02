@@ -402,7 +402,7 @@ function BookingApp() {
           /* Steps 1-4: main content + sidebar */
           <div className="flex flex-col lg:flex-row gap-5 lg:gap-6 items-start">
             <div className="flex-1 min-w-0 w-full">
-              {currentStep === 1 && <Step1 onSelectionChange={setStep1Data} />}
+              {currentStep === 1 && <Step1 onSelectionChange={setStep1Data} region={region} />}
               {currentStep === 2 && (
                 <Step2
                   selectedExtras={selectedExtras}

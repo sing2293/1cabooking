@@ -31,9 +31,10 @@ const EMPTY: Step1Selection = {
 
 interface Props {
   onSelectionChange: (sel: Step1Selection) => void;
+  region?: string;
 }
 
-export default function Step1({ onSelectionChange }: Props) {
+export default function Step1({ onSelectionChange, region }: Props) {
   const [view, setView] = useState<'categories' | 'packages'>('categories');
   const [selectedCategory, setSelectedCategory] = useState<ServiceCategory | null>(null);
   const [expandedPackageId, setExpandedPackageId] = useState<string | null>(null);
@@ -165,5 +166,5 @@ export default function Step1({ onSelectionChange }: Props) {
     );
   }
 
-  return <CategoryGrid onSelectCategory={handleSelectCategory} />;
+  return <CategoryGrid onSelectCategory={handleSelectCategory} region={region} />;
 }

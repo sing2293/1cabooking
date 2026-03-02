@@ -4,13 +4,18 @@ import ServiceIcon from './ServiceIcon';
 
 interface Props {
   onSelectCategory: (category: ServiceCategory) => void;
+  region?: string;
 }
 
-export default function CategoryGrid({ onSelectCategory }: Props) {
+export default function CategoryGrid({ onSelectCategory, region }: Props) {
   const { t, lang } = useLang();
 
-  const mainService = SERVICES[0]; // Central Air — most popular
-  const otherServices = SERVICES.slice(1);
+  const visibleServices = region === 'montreal'
+    ? SERVICES.filter((s) => s.id !== 'carpet')
+    : SERVICES;
+
+  const mainService = visibleServices[0]; // Central Air — most popular
+  const otherServices = visibleServices.slice(1);
 
   return (
     <div>
