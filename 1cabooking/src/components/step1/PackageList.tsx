@@ -70,12 +70,14 @@ export default function PackageList({
       <p className="text-sm text-gray-500 mb-1">
         {lang === 'en' ? 'Choose the service level that fits your needs.' : 'Choisissez le niveau de service qui correspond à vos besoins.'}
       </p>
+      {/* "I'm not sure, help me choose" — hidden for now
       {category.id === 'central-air' && (
         <button className="text-sm text-blue-600 hover:underline mb-4 flex items-center gap-1">
           {lang === 'en' ? "I'm not sure, help me choose" : "Je ne suis pas sûr, aidez-moi à choisir"}
           <ChevronLeft className="w-3.5 h-3.5 rotate-180" />
         </button>
       )}
+      */}
 
       <div className="space-y-3">
         {category.packages.map((pkg) => {

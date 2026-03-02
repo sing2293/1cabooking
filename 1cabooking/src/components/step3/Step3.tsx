@@ -306,7 +306,7 @@ export default function Step3({ data, onChange }: Props) {
           />
           <span className="text-sm text-gray-700">
             {lang === 'en' ? 'I confirm I have read and understand the ' : 'Je confirme avoir lu et compris la '}
-            <a href="#" className="text-blue-600 underline hover:text-blue-800">
+            <a href="https://1cleanair.ca/privacy-policy/" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline hover:text-blue-800">
               {lang === 'en' ? 'Service Agreement & Precautions' : 'Entente de service et précautions'}
             </a>
             .{' '}

@@ -12,9 +12,11 @@ import { EXTRAS } from './data/extras';
 import { PROVINCE_TAXES } from './data/step3Options';
 import { Check } from 'lucide-react';
 import LocationGate from './components/LocationGate';
+import { captureTrackingData, generateEventId } from './utils/tracking';
 
 const BACKEND_URL = '';  // always use /api/* — Vite proxy in dev, Vercel functions in prod
 const API_SECRET  = '1cleanAir_2026_dispatch_secure_X9d83jsk29DKL';
+const N8N_WEBHOOK = 'https://anuj1cleanair.app.n8n.cloud/webhook-test/1c861c48-42c0-40ce-af78-b4b0b274cc24'; // ← paste your n8n webhook URL here
 
 const EMPTY_STEP1: Step1Selection = {
   isValid: false,
@@ -47,6 +49,9 @@ function BookingApp() {
 
   /* Carpet service uses its own truck pool regardless of geo-region */
   const effectiveRegion = step1Data.categoryId === 'carpet' ? 'carpet' : region;
+
+  /* ── Tracking (UTM + FB cookies) — captured once on mount ── */
+  const [tracking] = useState(() => captureTrackingData());
 
   /* ── Availability prefetch (starts at Step 2) ── */
   const [availDays, setAvailDays]       = useState<DayAvailability[]>([]);
@@ -244,6 +249,60 @@ function BookingApp() {
       }
 
       setBookState('done');
+
+      // ── n8n lead webhook (fire-and-forget) ──
+      if (N8N_WEBHOOK && N8N_WEBHOOK !== 'YOUR_N8N_WEBHOOK_URL') {
+        const slot = step4Data.selectedSlot!;
+        fetch(N8N_WEBHOOK, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            // Customer
+            name:     step3Data.fullName,
+            email:    step3Data.email,
+            phone:    step3Data.phone,
+            address:  step3Data.streetAddress,
+            province: step3Data.province,
+            language: step3Data.languagePreference,
+            // Appointment
+            date:       step4Data.selectedDate,
+            time_start: slot.start,
+            time_end:   slot.end,
+            time_label: slot.label,
+            // Service
+            service_category: step1Data.categoryId,
+            service_package:  (step1Data.packageName as Record<string, string> | null)?.en ?? '',
+            vent_count:       step1Data.ventCount,
+            vent_mode:        step1Data.ventMode,
+            // Extras
+            extras: Object.entries(selectedExtras).map(([id, qty]) => ({ id, qty })),
+            dryer_vent_locations: Object.entries(dryerVentLocations)
+              .filter(([, qty]) => qty > 0)
+              .map(([id, qty]) => ({ id, qty })),
+            // Pricing
+            subtotal:       subtotal,
+            tax:            totalTax,
+            total:          subtotal + totalTax,
+            coupon_discount: couponDiscount,
+            // Notes
+            notes: buildNotes(),
+            // Meta
+            region:    effectiveRegion,
+            booked_at: new Date().toISOString(),
+            // FB / UTM tracking
+            event_id:         generateEventId(),
+            event_source_url: tracking.event_source_url,
+            fbp:              tracking.fbp,
+            fbc:              tracking.fbc,
+            utm_source:       tracking.utm_source,
+            utm_campaign:     tracking.utm_campaign,
+            utm_medium:       tracking.utm_medium,
+            utm_content:      tracking.utm_content,
+            utm_term:         tracking.utm_term,
+            utm_id:           tracking.utm_id,
+          }),
+        }).catch(() => {}); // never block the confirmation
+      }
     } catch (e: unknown) {
       setBookError((e as Error).message);
       setBookState('error');
