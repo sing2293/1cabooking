@@ -35,6 +35,7 @@ function BookingApp() {
 
   const [step1Data, setStep1Data] = useState<Step1Selection>(EMPTY_STEP1);
   const [selectedExtras, setSelectedExtras] = useState<Record<string, number>>({});
+  const [dryerVentLocations, setDryerVentLocations] = useState<Record<string, number>>({});
   const [couponCode, setCouponCode] = useState('');
   const [couponDiscount] = useState(0);
   const [step3Data, setStep3Data] = useState<Step3Data>(EMPTY_STEP3);
@@ -105,11 +106,25 @@ function BookingApp() {
   const [bookState, setBookState]   = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
   const [bookError, setBookError]   = useState('');
 
+  const handleDryerVentLocationChange = (id: string, qty: number) => {
+    setDryerVentLocations((prev) => {
+      const next = { ...prev };
+      if (qty === 0) delete next[id];
+      else next[id] = qty;
+      return next;
+    });
+  };
+
   /* ── Total calculation ── */
+  const dryerVentExtra = EXTRAS.find((e) => e.id === 'extra-dryer-vent');
+  const dryerVentTotal = dryerVentExtra?.dryerLocations
+    ? dryerVentExtra.dryerLocations.reduce((sum, loc) => sum + loc.price * (dryerVentLocations[loc.id] ?? 0), 0)
+    : 0;
+
   const extrasTotal = Object.entries(selectedExtras).reduce((sum, [id, qty]) => {
     const extra = EXTRAS.find((e) => e.id === id);
     return sum + (extra ? extra.bundlePrice * qty : 0);
-  }, 0);
+  }, 0) + dryerVentTotal;
 
   const province       = currentStep >= 3 ? step3Data.province : 'Québec';
   const unitLocationFee = currentStep >= 3 ? step3Data.unitLocationFee : 0;
@@ -167,6 +182,14 @@ function BookingApp() {
       const extra = EXTRAS.find((e) => e.id === id);
       if (extra) lines.push(`  • ${extra.name.en}${qty > 1 ? ` ×${qty}` : ''}: ${fmt(extra.bundlePrice * qty)}`);
     });
+
+    // Dryer vent locations
+    if (dryerVentTotal > 0) {
+      dryerVentExtra?.dryerLocations?.forEach((loc) => {
+        const qty = dryerVentLocations[loc.id] ?? 0;
+        if (qty > 0) lines.push(`  • ${loc.label.en} ×${qty}: ${fmt(loc.price * qty)}`);
+      });
+    }
 
     if (unitLocationFee > 0) lines.push(`  • Unit Location Fee: ${fmt(unitLocationFee)}`);
 
@@ -306,6 +329,7 @@ function BookingApp() {
             step3={step3Data}
             step4={step4Data}
             selectedExtras={selectedExtras}
+            dryerVentLocations={dryerVentLocations}
             couponDiscount={couponDiscount}
             bookError={bookState === 'error' ? bookError : null}
           />
@@ -318,6 +342,8 @@ function BookingApp() {
                 <Step2
                   selectedExtras={selectedExtras}
                   onExtrasChange={setSelectedExtras}
+                  dryerVentLocations={dryerVentLocations}
+                  onDryerVentLocationChange={handleDryerVentLocationChange}
                   categoryId={step1Data.categoryId}
                   packageId={step1Data.packageId}
                 />
@@ -335,6 +361,7 @@ function BookingApp() {
                 step={currentStep}
                 step1={step1Data}
                 selectedExtras={selectedExtras}
+                dryerVentLocations={dryerVentLocations}
                 province={province}
                 unitLocationFee={unitLocationFee}
                 couponCode={couponCode}

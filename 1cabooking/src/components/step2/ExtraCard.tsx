@@ -7,6 +7,8 @@ interface Props {
   quantity: number;
   onAdd: () => void;
   onQuantityChange: (qty: number) => void;
+  dryerVentLocations?: Record<string, number>;
+  onDryerVentLocationChange?: (id: string, qty: number) => void;
 }
 
 export default function ExtraCard({
@@ -14,11 +16,17 @@ export default function ExtraCard({
   quantity,
   onAdd,
   onQuantityChange,
+  dryerVentLocations = {},
+  onDryerVentLocationChange,
 }: Props) {
   const { t, lang } = useLang();
   const [imgError, setImgError] = useState(false);
 
-  const isSelected = quantity > 0;
+  const hasDryerLocations = !!extra.dryerLocations?.length;
+  const dryerTotal = hasDryerLocations
+    ? extra.dryerLocations!.reduce((sum, loc) => sum + loc.price * (dryerVentLocations[loc.id] ?? 0), 0)
+    : 0;
+  const isSelected = hasDryerLocations ? dryerTotal > 0 : quantity > 0;
 
   return (
     <div
@@ -43,26 +51,21 @@ export default function ExtraCard({
           </div>
         )}
 
-        {/* SPECIAL BUNDLE RATE badge */}
         <span className="absolute bottom-2 left-2 bg-green-600 text-white text-[9px] font-bold px-2 py-0.5 rounded">
           {lang === 'en' ? 'SPECIAL BUNDLE RATE' : 'TARIF FORFAIT SPÉCIAL'}
         </span>
 
-        {/* Selection radio */}
         <div
           className={`absolute top-2 right-2 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
             isSelected ? 'border-blue-500 bg-blue-500' : 'border-white bg-white'
           }`}
         >
-          {isSelected && (
-            <div className="w-2.5 h-2.5 rounded-full bg-white" />
-          )}
+          {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-white" />}
         </div>
       </div>
 
       {/* Card body */}
       <div className="p-4 flex flex-col flex-1">
-        {/* Name + price row */}
         <div className="flex items-start justify-between gap-2 mb-2">
           <h3 className="font-bold text-gray-900 text-sm leading-snug flex-1">{t(extra.name)}</h3>
           <div className="text-right shrink-0">
@@ -76,11 +79,42 @@ export default function ExtraCard({
           </div>
         </div>
 
-        {/* Description */}
         <p className="text-xs text-blue-700 leading-snug mb-4 flex-1">{t(extra.description)}</p>
 
         {/* Action area */}
-        {isSelected && extra.hasQuantity ? (
+        {hasDryerLocations ? (
+          <div className="border-t border-gray-100 pt-3">
+            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2">
+              {lang === 'en'
+                ? 'Where is the dryer exhaust duct located outside?'
+                : 'Où est situé le conduit d\'évacuation à l\'extérieur?'}
+            </p>
+            <div className="space-y-2">
+              {extra.dryerLocations!.map((loc) => {
+                const qty = dryerVentLocations[loc.id] ?? 0;
+                return (
+                  <div key={loc.id} className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-xs text-gray-700 leading-snug">{t(loc.label)}</p>
+                      <p className="text-xs text-blue-600 font-semibold">${loc.price.toFixed(2)}</p>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <button
+                        onClick={() => onDryerVentLocationChange?.(loc.id, Math.max(0, qty - 1))}
+                        className="w-7 h-7 rounded border border-gray-300 flex items-center justify-center text-gray-600 hover:border-blue-500 hover:text-blue-600 transition-colors font-medium"
+                      >−</button>
+                      <span className="w-5 text-center font-semibold text-sm">{qty}</span>
+                      <button
+                        onClick={() => onDryerVentLocationChange?.(loc.id, qty + 1)}
+                        className="w-7 h-7 rounded border border-gray-300 flex items-center justify-center text-gray-600 hover:border-blue-500 hover:text-blue-600 transition-colors font-medium"
+                      >+</button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : isSelected && extra.hasQuantity ? (
           <div className="flex items-center justify-between border-t border-gray-100 pt-3">
             <span className="text-xs font-semibold text-gray-600">
               {lang === 'en' ? 'Quantity Required:' : 'Quantité requise:'}
@@ -89,16 +123,12 @@ export default function ExtraCard({
               <button
                 onClick={() => onQuantityChange(Math.max(0, quantity - 1))}
                 className="w-7 h-7 rounded border border-gray-300 flex items-center justify-center text-gray-600 hover:border-blue-500 hover:text-blue-600 transition-colors font-medium"
-              >
-                −
-              </button>
+              >−</button>
               <span className="w-6 text-center font-semibold text-sm">{quantity}</span>
               <button
                 onClick={() => onQuantityChange(quantity + 1)}
                 className="w-7 h-7 rounded border border-gray-300 flex items-center justify-center text-gray-600 hover:border-blue-500 hover:text-blue-600 transition-colors font-medium"
-              >
-                +
-              </button>
+              >+</button>
             </div>
           </div>
         ) : isSelected ? (

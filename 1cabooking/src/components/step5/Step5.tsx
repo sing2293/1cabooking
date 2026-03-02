@@ -11,6 +11,7 @@ interface Props {
   step3: Step3Data;
   step4: Step4Data;
   selectedExtras: Record<string, number>;
+  dryerVentLocations: Record<string, number>;
   couponDiscount: number;
   bookError?: string | null;
 }
@@ -36,14 +37,19 @@ function formatSlotTime(iso: string): string {
   }).toUpperCase();
 }
 
-export default function Step5({ step1, step3, step4, selectedExtras, couponDiscount, bookError }: Props) {
+export default function Step5({ step1, step3, step4, selectedExtras, dryerVentLocations, couponDiscount, bookError }: Props) {
   const { lang, t } = useLang();
 
   /* ── Price calculation (mirrors App.tsx) ── */
+  const dryerVentExtra = EXTRAS.find((e) => e.id === 'extra-dryer-vent');
+  const dryerVentTotal = dryerVentExtra?.dryerLocations
+    ? dryerVentExtra.dryerLocations.reduce((sum, loc) => sum + loc.price * (dryerVentLocations[loc.id] ?? 0), 0)
+    : 0;
+
   const extrasTotal = Object.entries(selectedExtras).reduce((sum, [id, qty]) => {
     const extra = EXTRAS.find((e) => e.id === id);
     return sum + (extra ? extra.bundlePrice * qty : 0);
-  }, 0);
+  }, 0) + dryerVentTotal;
 
   const subtotal = step1.subtotal + extrasTotal + step3.unitLocationFee - couponDiscount;
   const taxInfo = PROVINCE_TAXES[step3.province] ?? PROVINCE_TAXES['Québec'];
@@ -154,6 +160,26 @@ export default function Step5({ step1, step3, step4, selectedExtras, couponDisco
                     {t(extra.name)}{qty > 1 ? ` × ${qty}` : ''}
                   </span>
                   <span className="text-sm font-semibold text-gray-900">{fmt(extra.bundlePrice * qty)}</span>
+                </div>
+              );
+            })}
+
+            {/* Dryer vent locations */}
+            {dryerVentTotal > 0 && (
+              <div className="flex justify-between items-baseline">
+                <span className="text-xs font-semibold text-amber-600">
+                  {lang === 'en' ? 'Dryer Vent Cleaning' : 'Nettoyage sèche-linge'}
+                </span>
+                <span className="text-sm font-semibold text-gray-900">{fmt(dryerVentTotal)}</span>
+              </div>
+            )}
+            {dryerVentExtra?.dryerLocations?.map((loc) => {
+              const qty = dryerVentLocations[loc.id] ?? 0;
+              if (qty === 0) return null;
+              return (
+                <div key={loc.id} className="flex justify-between items-baseline pl-2">
+                  <span className="text-xs text-gray-500">• {t(loc.label)} × {qty}</span>
+                  <span className="text-xs text-gray-600">{fmt(loc.price * qty)}</span>
                 </div>
               );
             })}
