@@ -198,11 +198,11 @@ export default function LocationGate({ onConfirm }: Props) {
       </div>
 
       {/* ── Sticky bottom bar ── */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg">
+      <div className="fixed bottom-0 left-0 right-0 bg-slate-900 shadow-2xl">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
           <a
             href="tel:6136124828"
-            className="flex items-center gap-2 text-sm font-semibold text-blue-700 hover:text-blue-900 transition-colors"
+            className="flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white transition-colors"
           >
             <Phone className="w-4 h-4" />
             {lang === 'en' ? 'Emergency' : 'Urgence'}
@@ -212,8 +212,8 @@ export default function LocationGate({ onConfirm }: Props) {
             disabled={!canConfirm}
             className={`px-8 py-2.5 sm:py-3 rounded-lg font-semibold text-sm transition-colors ${
               canConfirm
-                ? 'bg-blue-700 hover:bg-blue-800 text-white'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                ? 'bg-blue-600 hover:bg-blue-500 text-white'
+                : 'bg-slate-700 text-slate-500 cursor-not-allowed'
             }`}
           >
             {lang === 'en' ? 'Confirm' : 'Confirmer'}

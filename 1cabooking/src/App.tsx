@@ -322,7 +322,7 @@ function BookingApp() {
   /* ── Location gate (before booking flow) ── */
   if (!locationConfirmed) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen bg-slate-50 flex flex-col">
         <Header />
         <LocationGate onConfirm={(r, _city, address) => {
           setRegion(r);
@@ -340,15 +340,15 @@ function BookingApp() {
   /* ── Booking confirmed screen ── */
   if (bookState === 'done') {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col">
+      <div className="min-h-screen bg-slate-50 flex flex-col">
         <Header />
         <div className="flex-1 flex items-center justify-center px-4 py-16">
-          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-10 max-w-md w-full text-center space-y-5">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-              <Check className="w-8 h-8 text-green-600" strokeWidth={3} />
+          <div className="bg-white rounded-2xl shadow-xl p-10 max-w-md w-full text-center space-y-6 border border-gray-100">
+            <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto ring-4 ring-emerald-100">
+              <Check className="w-10 h-10 text-emerald-500" strokeWidth={2.5} />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 {lang === 'en' ? 'Booking Confirmed!' : 'Réservation confirmée!'}
               </h2>
               <p className="text-sm text-gray-500 leading-relaxed">
@@ -357,13 +357,13 @@ function BookingApp() {
                   : 'Un associé vous contactera concernant cette réservation.'}
               </p>
             </div>
-            <div className="border-t border-gray-100 pt-4">
-              <p className="text-xs text-gray-400 mb-1">
-                {lang === 'en' ? 'Urgent question? Contact us at' : 'Question urgente? Contactez-nous au'}
+            <div className="bg-slate-50 rounded-xl px-6 py-4">
+              <p className="text-xs text-gray-400 mb-1 font-medium uppercase tracking-wide">
+                {lang === 'en' ? 'Urgent question? Call us' : 'Question urgente? Appelez-nous'}
               </p>
               <a
                 href="tel:6136124828"
-                className="text-base font-bold text-blue-700 hover:text-blue-900 transition-colors"
+                className="text-xl font-bold text-blue-600 hover:text-blue-700 transition-colors"
               >
                 (613)-612-4828
               </a>
@@ -377,14 +377,16 @@ function BookingApp() {
   const isConfirmStep = currentStep === 5;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       <Header />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-2 sm:pt-4">
-        <StepIndicator currentStep={currentStep} />
+      <div className="bg-white border-b border-gray-100 shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <StepIndicator currentStep={currentStep} />
+        </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-28 sm:pb-32">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-5 sm:pt-6 pb-28 sm:pb-32">
         {isConfirmStep ? (
           /* Step 5 is full-width — no sidebar */
           <Step5
@@ -438,19 +440,19 @@ function BookingApp() {
       </div>
 
       {/* ── Sticky bottom bar ── */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-slate-900 shadow-2xl z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            <p className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">
               {lang === 'en' ? 'Total' : 'Total'}
             </p>
-            <p className="text-lg sm:text-2xl font-bold text-gray-900">{fmt(displayTotal)}</p>
+            <p className="text-lg sm:text-2xl font-bold text-white">{fmt(displayTotal)}</p>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             {currentStep > 1 && (
               <button
                 onClick={handleBack}
-                className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold text-sm border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+                className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold text-sm border border-slate-600 text-slate-300 hover:bg-slate-800 transition-colors"
               >
                 {lang === 'en' ? 'Back' : 'Retour'}
               </button>
@@ -460,10 +462,10 @@ function BookingApp() {
               disabled={!canProceed || bookState === 'loading'}
               className={`px-5 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold text-sm flex items-center gap-1.5 transition-colors ${
                 !canProceed || bookState === 'loading'
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
                   : isConfirmStep
-                  ? 'bg-green-600 hover:bg-green-700 text-white'
-                  : 'bg-blue-700 hover:bg-blue-800 text-white'
+                  ? 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                  : 'bg-blue-600 hover:bg-blue-500 text-white'
               }`}
             >
               {isConfirmStep ? (

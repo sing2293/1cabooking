@@ -17,7 +17,7 @@ export default function StepIndicator({ currentStep }: Props) {
   const { t } = useLang();
 
   return (
-    <div className="flex items-center justify-between max-w-2xl mx-auto py-3 sm:py-4">
+    <div className="flex items-center justify-between max-w-2xl mx-auto py-4 sm:py-5">
       {STEPS.map((step, idx) => {
         const isActive    = step.num === currentStep;
         const isCompleted = step.num < currentStep;
@@ -27,26 +27,26 @@ export default function StepIndicator({ currentStep }: Props) {
             <div className="flex flex-col items-center">
               {/* Circle */}
               <div
-                className={`w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold transition-colors ${
+                className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold ring-2 ring-offset-1 transition-all duration-200 ${
                   isActive
-                    ? 'bg-blue-700 text-white'
+                    ? 'bg-blue-600 text-white ring-blue-300 shadow-md shadow-blue-200'
                     : isCompleted
-                    ? 'bg-green-500 text-white'
-                    : 'bg-gray-200 text-gray-400'
+                    ? 'bg-emerald-500 text-white ring-emerald-200'
+                    : 'bg-gray-100 text-gray-400 ring-gray-100'
                 }`}
               >
                 {isCompleted
-                  ? <Check className="w-3 h-3 sm:w-4 sm:h-4" strokeWidth={3} />
+                  ? <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={3} />
                   : step.num}
               </div>
-              {/* Label — hidden on xs, visible sm+ */}
+              {/* Label */}
               <span
-                className={`hidden sm:block mt-1 text-[9px] sm:text-[10px] font-semibold tracking-wider ${
+                className={`hidden sm:block mt-1.5 text-[9px] sm:text-[10px] font-bold tracking-widest transition-colors ${
                   isActive
-                    ? 'text-blue-700'
+                    ? 'text-blue-600'
                     : isCompleted
-                    ? 'text-green-600'
-                    : 'text-gray-400'
+                    ? 'text-emerald-600'
+                    : 'text-gray-300'
                 }`}
               >
                 {t(step.label)}
@@ -56,8 +56,8 @@ export default function StepIndicator({ currentStep }: Props) {
             {/* Connector line */}
             {idx < STEPS.length - 1 && (
               <div
-                className={`flex-1 h-0.5 mx-1 sm:mx-2 mb-0 sm:mb-4 ${
-                  isCompleted ? 'bg-green-400' : 'bg-gray-200'
+                className={`flex-1 h-0.5 mx-2 mb-0 sm:mb-4 rounded-full transition-colors duration-300 ${
+                  isCompleted ? 'bg-emerald-400' : 'bg-gray-200'
                 }`}
               />
             )}
