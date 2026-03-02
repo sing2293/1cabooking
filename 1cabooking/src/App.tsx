@@ -324,16 +324,22 @@ function BookingApp() {
   };
 
   /* ── Location gate (before booking flow) ── */
+  /* Gatineau-area cities use Ottawa trucks but are in Québec for taxes */
+  const GATINEAU_QC = ['gatineau', 'hull', 'aylmer', 'buckingham', 'chelsea', 'wakefield', 'cantley', 'pontiac', 'la peche'];
+  const normalizeCity = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+
   if (!locationConfirmed) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col">
         <Header />
-        <LocationGate onConfirm={(r, _city, address) => {
+        <LocationGate onConfirm={(r, city, address) => {
           setRegion(r);
+          const isGatineau = GATINEAU_QC.some(c => normalizeCity(city).includes(c));
+          const province = (r === 'montreal' || isGatineau) ? 'Québec' : 'Ontario';
           setStep3Data((prev) => ({
             ...prev,
             streetAddress: address,
-            province: r === 'ottawa' ? 'Ontario' : 'Québec',
+            province,
           }));
           setLocationConfirmed(true);
         }} />
