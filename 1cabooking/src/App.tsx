@@ -11,6 +11,7 @@ import Step5 from './components/step5/Step5';
 import { EXTRAS, EXTENDED_COVERAGE } from './data/extras';
 import { PROVINCE_TAXES } from './data/step3Options';
 import { Check } from 'lucide-react';
+import LocationGate from './components/LocationGate';
 
 const BACKEND_URL = '';  // always use /api/* — Vite proxy in dev, Vercel functions in prod
 const API_SECRET  = '1cleanAir_2026_dispatch_secure_X9d83jsk29DKL';
@@ -40,6 +41,10 @@ function BookingApp() {
   const [step3Data, setStep3Data] = useState<Step3Data>(EMPTY_STEP3);
   const [step4Data, setStep4Data] = useState<Step4Data>(EMPTY_STEP4);
 
+  /* ── Location gate ── */
+  const [locationConfirmed, setLocationConfirmed] = useState(false);
+  const [calendarIds, setCalendarIds]             = useState('');
+
   /* ── Availability prefetch (starts at Step 2) ── */
   const [availDays, setAvailDays]       = useState<DayAvailability[]>([]);
   const [availLoading, setAvailLoading] = useState(false);
@@ -64,6 +69,7 @@ function BookingApp() {
         workStart:       '08:00',
         workEnd:         '16:00',
         slotStepMinutes: 60,
+        calendar_ids:    calendarIds,
       }),
     })
       .then(async (r) => {
@@ -200,13 +206,14 @@ function BookingApp() {
           'X-API-SECRET': API_SECRET,
         },
         body: JSON.stringify({
-          start:   slot.start,
-          end:     slot.end,
-          name:    step3Data.fullName,
-          phone:   step3Data.phone,
-          email:   step3Data.email,
-          address: step3Data.streetAddress,
-          notes: buildNotes(),
+          start:        slot.start,
+          end:          slot.end,
+          name:         step3Data.fullName,
+          phone:        step3Data.phone,
+          email:        step3Data.email,
+          address:      step3Data.streetAddress,
+          notes:        buildNotes(),
+          calendar_ids: calendarIds,
         }),
       });
 
@@ -239,6 +246,20 @@ function BookingApp() {
     if (bookState === 'error') { setBookState('idle'); setBookError(''); }
     setCurrentStep((s) => Math.max(1, s - 1));
   };
+
+  /* ── Location gate (before booking flow) ── */
+  if (!locationConfirmed) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <Header />
+        <LocationGate onConfirm={(ids, _city, address) => {
+          setCalendarIds(ids);
+          setStep3Data((prev) => ({ ...prev, streetAddress: address }));
+          setLocationConfirmed(true);
+        }} />
+      </div>
+    );
+  }
 
   /* ── Booking confirmed screen ── */
   if (bookState === 'done') {
