@@ -90,7 +90,7 @@ function BookingApp() {
       })
       .catch((e: Error) => setAvailError(e.message))
       .finally(() => setAvailLoading(false));
-  }, [currentStep, availFetched]);
+  }, [currentStep, availFetched, region]);
 
   /* ── Booking state ── */
   const [bookState, setBookState]   = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
