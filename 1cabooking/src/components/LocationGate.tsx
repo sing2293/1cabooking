@@ -7,11 +7,43 @@ function normalize(s: string): string {
   return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
 }
 
+/* Blue zone — Ottawa suburbs (all → Ottawa trucks) */
+const OTTAWA_CITIES = [
+  'ottawa',
+  // West
+  'arnprior', 'carleton place', 'smiths falls', 'perth',
+  // South / St. Lawrence corridor
+  'kemptville', 'manotick', 'embrun', 'russell', 'casselman',
+  'rockland', 'clarence-rockland', 'brockville', 'prescott', 'cornwall',
+  // Kingston corridor
+  'kingston', 'gananoque', 'napanee', 'greater napanee',
+].map(normalize);
+
+/* Red zone — Gatineau area (also → Ottawa trucks) */
+const GATINEAU_CITIES = [
+  'gatineau', 'hull', 'aylmer', 'buckingham', 'chelsea',
+  'wakefield', 'cantley', 'pontiac', 'la peche',
+].map(normalize);
+
+/* Pink zone — Greater Montreal (→ Montreal trucks) */
+const MONTREAL_CITIES = [
+  'montreal',
+  // North Shore
+  'laval', 'terrebonne', 'repentigny', 'blainville', 'boisbriand',
+  'saint-eustache', 'mirabel', 'deux-montagnes', 'sainte-therese',
+  'rosemere', 'mascouche', 'lachenaie', 'saint-jerome',
+  // West Island
+  'vaudreuil-dorion', 'pointe-claire', 'dorval', 'beaconsfield', 'kirkland',
+  // South Shore
+  'brossard', 'longueuil', 'saint-jean-sur-richelieu', 'chambly',
+  'saint-lambert', 'laprairie',
+].map(normalize);
+
 /* Returns the region key the backend expects, or null if not served */
 function cityToRegion(city: string): 'ottawa' | 'montreal' | null {
   const c = normalize(city);
-  if (c.includes('ottawa') || c.includes('gatineau')) return 'ottawa';
-  if (c.includes('montreal'))                         return 'montreal';
+  if (OTTAWA_CITIES.some(n => c.includes(n)) || GATINEAU_CITIES.some(n => c.includes(n))) return 'ottawa';
+  if (MONTREAL_CITIES.some(n => c.includes(n)))                                            return 'montreal';
   return null;
 }
 
