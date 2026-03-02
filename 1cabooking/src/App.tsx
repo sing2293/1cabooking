@@ -59,9 +59,6 @@ function BookingApp() {
   const [availError, setAvailError]     = useState<string | null>(null);
   const [availFetched, setAvailFetched] = useState(false);
 
-  /* 1-hour jobs: dryer-vent standalone, carpet. Everything else = 2-hour block */
-  const slotsNeeded = (step1Data.categoryId === 'dryer-vent' || step1Data.categoryId === 'carpet') ? 1 : 2;
-
   /* Reset availability when service type switches (e.g. carpet ↔ duct) */
   useEffect(() => {
     setAvailFetched(false);
@@ -71,6 +68,10 @@ function BookingApp() {
 
   useEffect(() => {
     if (currentStep < 2 || availFetched) return;
+
+    /* Compute inside the effect so the closure always has the fresh value */
+    const blocksNeeded = (step1Data.categoryId === 'dryer-vent' || step1Data.categoryId === 'carpet') ? 1 : 2;
+
     setAvailFetched(true);
     setAvailLoading(true);
 
@@ -98,7 +99,7 @@ function BookingApp() {
       .then((json) => {
         const rawDays: RawDay[] = json.days || [];
         const mapped: DayAvailability[] = rawDays
-          .map((d) => ({ date: d.date, slots: mergeSlots(d.slots || [], slotsNeeded) }))
+          .map((d) => ({ date: d.date, slots: mergeSlots(d.slots || [], blocksNeeded) }))
           .filter((d) => d.slots.length > 0)
           .filter((d) => {
             const [y, m, day] = d.date.split('-').map(Number);
@@ -108,7 +109,7 @@ function BookingApp() {
       })
       .catch((e: Error) => setAvailError(e.message))
       .finally(() => setAvailLoading(false));
-  }, [currentStep, availFetched, effectiveRegion]);
+  }, [currentStep, availFetched, effectiveRegion, step1Data.categoryId]);
 
   /* ── Booking state ── */
   const [bookState, setBookState]   = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
