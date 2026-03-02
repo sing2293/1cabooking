@@ -52,11 +52,11 @@ interface Props {
 }
 
 /* Reusable labelled field wrapper */
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
       <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
-        {label}
+        {label}{required && <span className="text-red-500 ml-0.5">*</span>}
       </label>
       {children}
     </div>
@@ -81,6 +81,19 @@ export default function Step3({ data, onChange }: Props) {
     onChange({ ...data, unitLocation: value, unitLocationFee: opt?.fee ?? 0 });
   };
 
+  const handlePhoneChange = (value: string) => {
+    const digits = value.replace(/\D/g, '').slice(0, 10);
+    let formatted = '';
+    if (digits.length >= 7) {
+      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+    } else if (digits.length >= 4) {
+      formatted = `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    } else if (digits.length > 0) {
+      formatted = `(${digits}`;
+    }
+    set('phone', formatted);
+  };
+
   const handleAddressChange = (address: string, province?: string) => {
     onChange({
       ...data,
@@ -103,7 +116,7 @@ export default function Step3({ data, onChange }: Props) {
           {lang === 'en' ? 'Contact Information' : 'Coordonnées'}
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label={lang === 'en' ? 'Full Name' : 'Nom complet'}>
+          <Field label={lang === 'en' ? 'Full Name' : 'Nom complet'} required>
             <input
               type="text"
               value={data.fullName}
@@ -112,7 +125,7 @@ export default function Step3({ data, onChange }: Props) {
             />
           </Field>
 
-          <Field label={lang === 'en' ? 'Email' : 'Courriel'}>
+          <Field label={lang === 'en' ? 'Email' : 'Courriel'} required>
             <input
               type="email"
               value={data.email}
@@ -121,12 +134,12 @@ export default function Step3({ data, onChange }: Props) {
             />
           </Field>
 
-          <Field label={lang === 'en' ? 'Cell Phone' : 'Téléphone cellulaire'}>
+          <Field label={lang === 'en' ? 'Cell Phone' : 'Téléphone cellulaire'} required>
             <input
               type="tel"
               value={data.phone}
-              onChange={(e) => set('phone', e.target.value)}
-              placeholder="514.555.1234"
+              onChange={(e) => handlePhoneChange(e.target.value)}
+              placeholder="(514) 555-1234"
               className={inputCls}
             />
           </Field>
@@ -153,7 +166,7 @@ export default function Step3({ data, onChange }: Props) {
           {lang === 'en' ? 'Property Details' : 'Détails de la propriété'}
         </h3>
         <div className="space-y-4">
-          <Field label={lang === 'en' ? 'Street Address' : 'Adresse'}>
+          <Field label={lang === 'en' ? 'Street Address' : 'Adresse'} required>
             <AddressAutocomplete
               value={data.streetAddress}
               onChange={handleAddressChange}

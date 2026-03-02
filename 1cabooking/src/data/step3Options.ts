@@ -13,16 +13,8 @@ export const LANGUAGE_PREFERENCES: SelectOption[] = [
 ];
 
 export const PROVINCES: SelectOption[] = [
-  { value: 'Québec',                    label: { en: 'Québec',                    fr: 'Québec'                    } },
-  { value: 'Ontario',                   label: { en: 'Ontario',                   fr: 'Ontario'                   } },
-  { value: 'British Columbia',          label: { en: 'British Columbia',          fr: 'Colombie-Britannique'      } },
-  { value: 'Alberta',                   label: { en: 'Alberta',                   fr: 'Alberta'                   } },
-  { value: 'Manitoba',                  label: { en: 'Manitoba',                  fr: 'Manitoba'                  } },
-  { value: 'Saskatchewan',              label: { en: 'Saskatchewan',              fr: 'Saskatchewan'              } },
-  { value: 'Nova Scotia',               label: { en: 'Nova Scotia',               fr: 'Nouvelle-Écosse'           } },
-  { value: 'New Brunswick',             label: { en: 'New Brunswick',             fr: 'Nouveau-Brunswick'         } },
-  { value: 'Newfoundland and Labrador', label: { en: 'Newfoundland and Labrador', fr: 'Terre-Neuve-et-Labrador'   } },
-  { value: 'Prince Edward Island',      label: { en: 'Prince Edward Island',      fr: 'Île-du-Prince-Édouard'     } },
+  { value: 'Québec',  label: { en: 'Québec',  fr: 'Québec'  } },
+  { value: 'Ontario', label: { en: 'Ontario', fr: 'Ontario' } },
 ];
 
 export const UNIT_LOCATIONS: SelectOption[] = [
