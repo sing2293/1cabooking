@@ -16,10 +16,15 @@ const MONTREAL_IDS = [
   'd9ee222fab82252f263e68dfb71b10a08a555063fd6e3ee9edba81019dd433bc@group.calendar.google.com',
 ].join(',');
 
+/* Strip accents so "Montréal" and "Montreal" both match "montreal" */
+function normalize(s: string): string {
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+
 function cityToCalendarIds(city: string): string | null {
-  const c = city.toLowerCase().trim();
+  const c = normalize(city);
   if (c.includes('ottawa') || c.includes('gatineau')) return OTTAWA_IDS;
-  if (c.includes('montreal') || c.includes('montréal')) return MONTREAL_IDS;
+  if (c.includes('montreal'))                         return MONTREAL_IDS;
   return null;
 }
 
