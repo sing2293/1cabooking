@@ -43,7 +43,7 @@ function BookingApp() {
 
   /* ── Location gate ── */
   const [locationConfirmed, setLocationConfirmed] = useState(false);
-  const [calendarIds, setCalendarIds]             = useState('');
+  const [region, setRegion]                       = useState<'ottawa' | 'montreal' | ''>('');
 
   /* ── Availability prefetch (starts at Step 2) ── */
   const [availDays, setAvailDays]       = useState<DayAvailability[]>([]);
@@ -69,7 +69,7 @@ function BookingApp() {
         workStart:       '08:00',
         workEnd:         '16:00',
         slotStepMinutes: 60,
-        calendar_ids:    calendarIds,
+        region,
       }),
     })
       .then(async (r) => {
@@ -213,7 +213,7 @@ function BookingApp() {
           email:        step3Data.email,
           address:      step3Data.streetAddress,
           notes:        buildNotes(),
-          calendar_ids: calendarIds,
+          region,
         }),
       });
 
@@ -252,8 +252,8 @@ function BookingApp() {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
         <Header />
-        <LocationGate onConfirm={(ids, _city, address) => {
-          setCalendarIds(ids);
+        <LocationGate onConfirm={(r, _city, address) => {
+          setRegion(r);
           setStep3Data((prev) => ({ ...prev, streetAddress: address }));
           setLocationConfirmed(true);
         }} />

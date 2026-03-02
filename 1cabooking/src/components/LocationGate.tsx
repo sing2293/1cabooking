@@ -2,29 +2,16 @@ import { useEffect, useRef, useState } from 'react';
 import { Phone } from 'lucide-react';
 import { useLang } from '../context/LanguageContext';
 
-/* ── Calendar ID lists ── */
-const OTTAWA_IDS = [
-  '674fb4f981c448b260e11a3a1ad1f286244a9bc9f880615d28fb79163f358c08@group.calendar.google.com',
-  'a23847281ec543be0de640b513c7333d8593ed34eff3fd5ddd68ad7fd7fd3e33@group.calendar.google.com',
-  'db649d98508b1605a70d20b3e68e2b63b77766244af6d705a05e03117e94fc7e@group.calendar.google.com',
-  'bdaa518313edbb0742006563876dec290d7686d9891e407623d5bc7159751046@group.calendar.google.com',
-  '3723a36307a932857157a91375969f577a5149d153739c63b0b9965bf959c85e@group.calendar.google.com',
-].join(',');
-
-const MONTREAL_IDS = [
-  '05a3563ac311327bed5c0ba221a9746927de14ee7d90413cb5c3dd14fc36d78b@group.calendar.google.com',
-  'd9ee222fab82252f263e68dfb71b10a08a555063fd6e3ee9edba81019dd433bc@group.calendar.google.com',
-].join(',');
-
-/* Strip accents so "Montréal" and "Montreal" both match "montreal" */
+/* Strip accents so "Montréal" → "montreal" */
 function normalize(s: string): string {
   return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
 }
 
-function cityToCalendarIds(city: string): string | null {
+/* Returns the region key the backend expects, or null if not served */
+function cityToRegion(city: string): 'ottawa' | 'montreal' | null {
   const c = normalize(city);
-  if (c.includes('ottawa') || c.includes('gatineau')) return OTTAWA_IDS;
-  if (c.includes('montreal'))                         return MONTREAL_IDS;
+  if (c.includes('ottawa') || c.includes('gatineau')) return 'ottawa';
+  if (c.includes('montreal'))                         return 'montreal';
   return null;
 }
 
@@ -32,7 +19,7 @@ function cityToCalendarIds(city: string): string | null {
 type AnyWindow = Window & typeof globalThis & Record<string, any>;
 
 interface Props {
-  onConfirm: (calendarIds: string, city: string, address: string) => void;
+  onConfirm: (region: 'ottawa' | 'montreal', city: string, address: string) => void;
 }
 
 export default function LocationGate({ onConfirm }: Props) {
@@ -43,7 +30,7 @@ export default function LocationGate({ onConfirm }: Props) {
   const [mapsReady, setMapsReady] = useState(false);
   const [city, setCity]           = useState('');
   const [address, setAddress]     = useState('');
-  const [calIds, setCalIds]       = useState<string | null>(null); // null = not checked yet, '' = not served
+  const [region, setRegion]       = useState<'ottawa' | 'montreal' | '' | null>(null); // null = not checked, '' = not served
   const [inputVal, setInputVal]   = useState('');
 
   /* ── Load Google Maps script once ── */
@@ -89,19 +76,19 @@ export default function LocationGate({ onConfirm }: Props) {
         get('administrative_area_level_3') ||
         get('administrative_area_level_2') || '';
 
-      const ids = cityToCalendarIds(detectedCity);
+      const ids = cityToRegion(detectedCity);
       setCity(detectedCity);
       setAddress(formatted);
-      setCalIds(ids ?? '');   // '' means not served
+      setRegion(ids ?? '');   // '' means not served
       setInputVal(formatted);
     });
   }, [mapsReady]);
 
-  const canConfirm = calIds !== null && calIds !== '';
-  const notServed  = calIds === '';
+  const canConfirm = region !== null && region !== '';
+  const notServed  = region === '';
 
   const handleConfirm = () => {
-    if (canConfirm) onConfirm(calIds!, city, address);
+    if (canConfirm) onConfirm(region!, city, address);
   };
 
   return (
@@ -154,7 +141,7 @@ export default function LocationGate({ onConfirm }: Props) {
             onChange={(e) => {
               setInputVal(e.target.value);
               // Reset result if user clears/edits
-              if (calIds !== null) { setCalIds(null); setCity(''); setAddress(''); }
+              if (region !== null) { setRegion(null); setCity(''); setAddress(''); }
             }}
             placeholder={lang === 'en' ? 'Start typing your address…' : 'Commencez à saisir…'}
             className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
