@@ -9,7 +9,7 @@ import Step3, { type Step3Data, EMPTY_STEP3 } from './components/step3/Step3';
 import Step4, { type Step4Data, EMPTY_STEP4, type DayAvailability, type RawDay, mergeSlots, toISODate } from './components/step4/Step4';
 import Step5 from './components/step5/Step5';
 import { EXTRAS } from './data/extras';
-import { PROVINCE_TAXES } from './data/step3Options';
+import { PROVINCE_TAXES, UNIT_LOCATIONS, LAST_CLEANING, RENOVATIONS, SPECIAL_REQUESTS, HOW_DID_YOU_HEAR } from './data/step3Options';
 import { Check } from 'lucide-react';
 import LocationGate from './components/LocationGate';
 import { captureTrackingData, generateEventId } from './utils/tracking';
@@ -170,6 +170,10 @@ function BookingApp() {
     true;
 
   /* ── Build calendar event notes ── */
+  /* Helper: resolve option value → English label */
+  const optLabel = (opts: { value: string; label: { en: string } }[], val: string) =>
+    opts.find((o) => o.value === val)?.label.en ?? val;
+
   const buildNotes = () => {
     const pkgName = step1Data.packageName
       ? (step1Data.packageName as { en: string; fr: string }).en
@@ -206,8 +210,16 @@ function BookingApp() {
     lines.push(`Subtotal: ${fmt(subtotal)}`);
     taxInfo.lines.forEach((l) => lines.push(`${l.label}: ${fmt(subtotal * l.rate)}`));
     lines.push(`TOTAL: ${fmt(displayTotal)}`);
+
+    // Property & History
     lines.push('');
     lines.push(`Province: ${step3Data.province}`);
+    if (step3Data.yearBuilt) lines.push(`Year Built: ${step3Data.yearBuilt}`);
+    lines.push(`Unit Location: ${optLabel(UNIT_LOCATIONS, step3Data.unitLocation)}`);
+    lines.push(`Last Cleaning: ${optLabel(LAST_CLEANING, step3Data.lastCleaning)}`);
+    lines.push(`Renovations: ${optLabel(RENOVATIONS, step3Data.renovationsSince)}`);
+    lines.push(`Special Request: ${optLabel(SPECIAL_REQUESTS, step3Data.specialRequest)}`);
+    if (step3Data.howDidYouHear) lines.push(`How Did You Hear: ${optLabel(HOW_DID_YOU_HEAR, step3Data.howDidYouHear)}`);
     if (step3Data.specialNotes) lines.push(`Customer Notes: ${step3Data.specialNotes}`);
 
     return lines.join('\n');
@@ -283,6 +295,14 @@ function BookingApp() {
             dryer_vent_locations: Object.entries(dryerVentLocations)
               .filter(([, qty]) => qty > 0)
               .map(([id, qty]) => ({ id, qty })),
+            // Property & History
+            year_built:       step3Data.yearBuilt,
+            unit_location:    optLabel(UNIT_LOCATIONS, step3Data.unitLocation),
+            last_cleaning:    optLabel(LAST_CLEANING, step3Data.lastCleaning),
+            renovations:      optLabel(RENOVATIONS, step3Data.renovationsSince),
+            special_request:  optLabel(SPECIAL_REQUESTS, step3Data.specialRequest),
+            how_did_you_hear: optLabel(HOW_DID_YOU_HEAR, step3Data.howDidYouHear),
+            special_notes:    step3Data.specialNotes,
             // Pricing
             subtotal:       subtotal,
             tax:            totalTax,
