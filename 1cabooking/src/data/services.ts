@@ -60,7 +60,7 @@ export const SERVICES: ServiceCategory[] = [
         },
         includes: [
           { en: 'Main Supply & Return Trunks', fr: 'Conduits principaux d\'alimentation et de retour' },
-          { en: 'Supply & Return Vents ($15 ea)', fr: 'Bouches d\'alimentation et de retour (15$ ch)' },
+          { en: '10 Vents Included (extra vents $15 ea)', fr: '10 bouches incluses (bouches suppl. 15$ ch)' },
           { en: 'Furnace Cabinet Clean & Check', fr: 'Nettoyage et vérification du cabinet de fournaise' },
           { en: 'NADCA Certified Technicians', fr: 'Techniciens certifiés NADCA' },
           { en: '30-Day Satisfaction Guarantee', fr: 'Garantie de satisfaction 30 jours' },
@@ -91,7 +91,7 @@ export const SERVICES: ServiceCategory[] = [
         },
         includes: [
           { en: 'Main Supply & Return Trunks', fr: 'Conduits principaux d\'alimentation et de retour' },
-          { en: 'Supply & Return Vents ($15 ea)', fr: 'Bouches d\'alimentation et de retour (15$ ch)' },
+          { en: '10 Vents Included (extra vents $15 ea)', fr: '10 bouches incluses (bouches suppl. 15$ ch)' },
           { en: 'Furnace Cabinet Clean & Check', fr: 'Nettoyage et vérification du cabinet de fournaise' },
           { en: 'NADCA Certified Technicians', fr: 'Techniciens certifiés NADCA' },
           { en: '30-Day Satisfaction Guarantee', fr: 'Garantie de satisfaction 30 jours' },
@@ -119,7 +119,7 @@ export const SERVICES: ServiceCategory[] = [
         },
         includes: [
           { en: 'Main Supply & Return Trunks', fr: 'Conduits principaux d\'alimentation et de retour' },
-          { en: 'Supply & Return Vents ($15 ea)', fr: 'Bouches d\'alimentation et de retour (15$ ch)' },
+          { en: '10 Vents Included (extra vents $15 ea)', fr: '10 bouches incluses (bouches suppl. 15$ ch)' },
           { en: 'Furnace Cabinet Clean & Check', fr: 'Nettoyage et vérification du cabinet de fournaise' },
           { en: 'NADCA Certified Technicians', fr: 'Techniciens certifiés NADCA' },
           { en: '30-Day Satisfaction Guarantee', fr: 'Garantie de satisfaction 30 jours' },
