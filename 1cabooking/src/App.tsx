@@ -301,10 +301,8 @@ function BookingApp() {
             vent_count:       step1Data.ventCount,
             vent_mode:        step1Data.ventMode,
             // Extras
-            extras: Object.entries(selectedExtras).map(([id, qty]) => ({ id, qty })),
-            dryer_vent_locations: Object.entries(dryerVentLocations)
-              .filter(([, qty]) => qty > 0)
-              .map(([id, qty]) => ({ id, qty })),
+            extras: Object.fromEntries(Object.entries(selectedExtras).filter(([, qty]) => qty > 0)),
+            dryer_vent_locations: Object.fromEntries(Object.entries(dryerVentLocations).filter(([, qty]) => qty > 0)),
             // Property & History
             year_built:       step3Data.yearBuilt,
             unit_location:    optLabel(UNIT_LOCATIONS, step3Data.unitLocation),
