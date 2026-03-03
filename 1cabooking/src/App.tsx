@@ -266,6 +266,16 @@ function BookingApp() {
 
       setBookState('done');
 
+      // ── Meta Pixel Lead event ──
+      const leadEventId = generateEventId();
+      if (typeof window !== 'undefined' && (window as any).fbq) {
+        (window as any).fbq('track', 'Lead', {
+          content_name: (step1Data.packageName as Record<string, string> | null)?.en ?? 'Booking',
+          value: subtotal + totalTax,
+          currency: 'CAD',
+        }, { eventID: leadEventId });
+      }
+
       // ── n8n lead webhook (fire-and-forget) ──
       if (N8N_WEBHOOK && N8N_WEBHOOK !== 'YOUR_N8N_WEBHOOK_URL') {
         const slot = step4Data.selectedSlot!;
@@ -314,7 +324,7 @@ function BookingApp() {
             region:    effectiveRegion,
             booked_at: new Date().toISOString(),
             // FB / UTM tracking
-            event_id:         generateEventId(),
+            event_id:         leadEventId,
             event_source_url: tracking.event_source_url,
             fbp:              tracking.fbp,
             fbc:              tracking.fbc,
