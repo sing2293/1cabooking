@@ -103,7 +103,17 @@ export default function Step4({ data, onChange, days, loading, error }: Props) {
     }
   }, [days]);
 
-  const availableSet = useMemo(() => new Set(days.map((d) => d.date)), [days]);
+  /* Hide past slots — only show slots starting at least 1 hour from now */
+  const cutoff = useMemo(() => new Date(Date.now() + 60 * 60 * 1000).toISOString(), []);
+
+  const futureDays: DayAvailability[] = useMemo(() =>
+    days
+      .map((d) => ({ ...d, slots: d.slots.filter((s) => s.start >= cutoff) }))
+      .filter((d) => d.slots.length > 0),
+    [days, cutoff],
+  );
+
+  const availableSet = useMemo(() => new Set(futureDays.map((d) => d.date)), [futureDays]);
 
   /* ── Calendar grid ── */
   const calGrid = useMemo(() => {
@@ -145,8 +155,8 @@ export default function Step4({ data, onChange, days, loading, error }: Props) {
   };
 
   const slotsToShow: DayAvailability[] = data.selectedDate
-    ? days.filter((d) => d.date === data.selectedDate)
-    : days;
+    ? futureDays.filter((d) => d.date === data.selectedDate)
+    : futureDays;
 
   const dayHeaders = lang === 'fr' ? DAY_HEADERS_FR : DAY_HEADERS_EN;
   const monthNames = lang === 'fr' ? MONTH_FR : MONTH_EN;
