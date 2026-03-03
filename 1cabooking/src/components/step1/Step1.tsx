@@ -122,9 +122,10 @@ export default function Step1({ onSelectionChange, region }: Props) {
 
       if (pkg.hasVentCount && vModes[pkgId] === 'known') {
         const vents = vCounts[pkgId] ?? 0;
-        if (vents > 0) {
-          lines.push({ label: `Vents × ${vents}`, amount: vents * 15 });
-          subtotal += vents * 15;
+        const extraVents = Math.max(0, vents - 10);
+        if (extraVents > 0) {
+          lines.push({ label: `Extra Vents × ${extraVents}`, amount: extraVents * 15 });
+          subtotal += extraVents * 15;
         }
       }
     }

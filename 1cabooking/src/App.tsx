@@ -135,7 +135,7 @@ function BookingApp() {
     return sum + (extra ? extra.bundlePrice * qty : 0);
   }, 0) + dryerVentTotal;
 
-  const province       = currentStep >= 3 ? step3Data.province : 'Québec';
+  const province       = step3Data.province;
   const unitLocationFee = currentStep >= 3 ? step3Data.unitLocationFee : 0;
   const subtotal       = step1Data.subtotal + extrasTotal + unitLocationFee - couponDiscount;
   const taxInfo        = PROVINCE_TAXES[province] ?? PROVINCE_TAXES['Québec'];
