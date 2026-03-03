@@ -103,8 +103,13 @@ export default function Step4({ data, onChange, days, loading, error }: Props) {
     }
   }, [days]);
 
-  /* Hide past slots — only show slots starting at least 1 hour from now */
-  const cutoff = useMemo(() => new Date(Date.now() + 60 * 60 * 1000).toISOString(), []);
+  /* Hide past slots — only show slots starting from the next full hour */
+  const cutoff = useMemo(() => {
+    const now = new Date();
+    now.setMinutes(0, 0, 0);
+    now.setHours(now.getHours() + 1);
+    return now.toISOString();
+  }, []);
 
   const futureDays: DayAvailability[] = useMemo(() =>
     days
