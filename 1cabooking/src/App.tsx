@@ -103,7 +103,8 @@ function BookingApp() {
           .filter((d) => d.slots.length > 0)
           .filter((d) => {
             const [y, m, day] = d.date.split('-').map(Number);
-            return new Date(y, m - 1, day).getDay() !== 0; // block Sundays
+            const dow = new Date(y, m - 1, day).getDay();
+            return dow !== 0 && dow !== 6; // block Sundays (0) and Saturdays (6)
           });
         setAvailDays(mapped);
       })
